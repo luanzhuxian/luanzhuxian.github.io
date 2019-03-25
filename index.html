@@ -269,6 +269,603 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/73f1724d.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/paimon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="栾铸显的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/post/73f1724d.html" itemprop="url">Git常用命令</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-09T17:46:34+08:00">
+                2018-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/post/73f1724d.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="http://yoursite.com/post/73f1724d.html" itemprop="commentCount">0</span> comments
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/post/73f1724d.html" class="leancloud_visitors" data-flag-title="Git常用命令">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="基本配置命令"><a href="#基本配置命令" class="headerlink" title="基本配置命令"></a>基本配置命令</h3><h4 id="Git常用命令速查表"><a href="#Git常用命令速查表" class="headerlink" title="Git常用命令速查表"></a>Git常用命令速查表</h4><h4 id="使用Git生成ssh密钥"><a href="#使用Git生成ssh密钥" class="headerlink" title="使用Git生成ssh密钥"></a>使用Git生成ssh密钥</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="设置全局用户名和邮箱"><a href="#设置全局用户名和邮箱" class="headerlink" title="设置全局用户名和邮箱"></a>设置全局用户名和邮箱</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;YourName&quot;</span><br><span class="line">git config --global user.email &quot;email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="初始化仓库"><a href="#初始化仓库" class="headerlink" title="初始化仓库"></a>初始化仓库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<h4 id="添加文件到暂存区"><a href="#添加文件到暂存区" class="headerlink" title="添加文件到暂存区"></a>添加文件到暂存区</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git add &lt;filename&gt;	#添加指定文件到暂存区</span><br><span class="line">git add .	         #添加工作区所有文件到暂存区</span><br><span class="line">git add -i	        #交互方式添加文件到暂存区</span><br><span class="line">git add -u	        #将工作区中已经变动的文件添加到暂存区，当新增加的文件不会被添加</span><br></pre></td></tr></table></figure>
+<h4 id="提交文件到仓库"><a href="#提交文件到仓库" class="headerlink" title="提交文件到仓库"></a>提交文件到仓库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;描述信息&quot;		#提交更新</span><br><span class="line">git commit -am &quot;描述信息&quot;	   #如果工作目录中仅是已跟踪的文件被修改或被删除，使用此提交命令</span><br></pre></td></tr></table></figure>
+<h4 id="分支的创建、删除、和平、切换、查看"><a href="#分支的创建、删除、和平、切换、查看" class="headerlink" title="分支的创建、删除、和平、切换、查看"></a>分支的创建、删除、和平、切换、查看</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git branch	                   #查看Git仓库中已有的分支</span><br><span class="line">git branch 新分支名 [分支起点]	#创建分支，如果没有分支起点的话，则默认在当前分支的最新提交上创建分支</span><br><span class="line">git checkout 分支名	          #切换分支</span><br><span class="line">git checkout -b 新分支名		   #创建同时切换到新分支</span><br><span class="line">git merge 要被合并的分支名	    #合并分支</span><br><span class="line">git branch -d 要删除的分支名	   #删除指定分支（如果分支没有被合并过，该命令会执行失败）</span><br><span class="line">git branch -D 要删除的分支名	   #删除指定分支，不管有没有被合并过</span><br><span class="line">gitk				                   #用图形界面查看分支提交历史</span><br></pre></td></tr></table></figure>
+<p>合并分支过程中如果发生冲突则需要自己手动解决冲突，然后再提交。有冲突时，<code>Git</code>会显示哪个文件有冲突，并在冲突的文件中加上特殊的标识符号，解决完冲突后，要手动去掉这些被添加的标识符号。如果冲突比较复杂的话，最好使用其他工具来协助，通过<code>git merge tool</code>来启动。冲突一般是在不同的分支上对同一文件的同一位置内容进行了改动，并已提交到仓库中，这样在合并的时候就会发生冲突。</p>
+<h4 id="标签的添加、删除、查看"><a href="#标签的添加、删除、查看" class="headerlink" title="标签的添加、删除、查看"></a>标签的添加、删除、查看</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git tag		                   #查看标签</span><br><span class="line">git tag 标签名	                #创建简单的标签</span><br><span class="line">git tag -a 标签名 -m &apos;附加信息&apos;	#创建附加信息的标签</span><br><span class="line">git show 标签名	               #通过标签查看信息</span><br><span class="line">git tag -d 标签名	             #删除标签</span><br></pre></td></tr></table></figure>
+<p>标签可以在需要的地方，为某个提交对象创建别名，这样以后我们就可以通过标签来查看一些信息，创建分支等。</p>
+<h4 id="查看工作目录状态"><a href="#查看工作目录状态" class="headerlink" title="查看工作目录状态"></a>查看工作目录状态</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+<p>在<code>git</code>命令执行后，要养成通过<code>git status</code>查看<code>git</code>状态的习惯，以便及时了解文件变化的情况。通过<code>git status</code>可以知道文件的状态（已修改未暂存、已删除、已修改并已暂存等待提交、未跟踪）。</p>
+<h4 id="查看提交历史"><a href="#查看提交历史" class="headerlink" title="查看提交历史"></a>查看提交历史</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git log</span><br><span class="line">git log -p	#显示每次提交文件变化</span><br></pre></td></tr></table></figure>
+<p>通过<code>git log</code>可以查看当前分支的所有提交历史，知道每次提交的<code>commit</code>对象的<code>ID</code>以及提交时附加的描述信息等。要显示更多的信息，需要使用其支持的选项，如<code>git log -p</code>可以将每次提交的文件变化也显示出来。  </p>
+<h4 id="查看指定的提交对象"><a href="#查看指定的提交对象" class="headerlink" title="查看指定的提交对象"></a>查看指定的提交对象</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git show commit_id	#查看指定的某次提交内容</span><br><span class="line">git show --all		#显示所有的提交历史内容</span><br><span class="line">git shortlog -s -n	#显示总的提交次数</span><br></pre></td></tr></table></figure>
+<p>通过<code>git log</code>可以显示整个提交历史，而通过<code>git show commit-id</code>则可以查看指定的某次提交内容，当然<code>git show -all</code>也可以显示出提交历史，另外还可以格式化显示内容。<br><code>commit-id</code>可以是commit对象对应的ID，也可以是HEAD，分支名，tag等。</p>
+<h4 id="查看工作区、暂存区、仓库之间的差异"><a href="#查看工作区、暂存区、仓库之间的差异" class="headerlink" title="查看工作区、暂存区、仓库之间的差异"></a>查看工作区、暂存区、仓库之间的差异</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git diff		      #比较工作区与暂存区的差异</span><br><span class="line">git diff HEAD		 #比较工作区与仓库中最近一次的提交间的差异</span><br><span class="line">git diff --cached	 #比较暂存区与仓库中最近一次提交的差异</span><br><span class="line">git blame filename	#可以列出该文件每次被修改的时间和内容。</span><br></pre></td></tr></table></figure>
+<h4 id="版本回退、撤销操作"><a href="#版本回退、撤销操作" class="headerlink" title="版本回退、撤销操作"></a>版本回退、撤销操作</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git reflog	              #显示提交历史的简介</span><br><span class="line">git checkout -- filename	#丢弃工作区的修改</span><br><span class="line">git reset --hard HEAD^		#回退到上一个版本</span><br><span class="line">git reset --hard commit_id	#回退到指定版本</span><br><span class="line">git checkout -- filename	  #恢复工作区被删除的指定文件（文件之前被提交到仓库中）</span><br><span class="line">git checkout -f 		      #恢复工作区中所有被删除的文件(文件之前被提交到仓库中)</span><br><span class="line">git ls-files -d			   #列出工作区被删除的文件（文件之前被提交到仓库中）</span><br></pre></td></tr></table></figure>
+<p>有时候，由于我们的误操作，产生了一些错误，我们发现后希望能够及时纠正这些因为误操作而产生的结果，将工作目录恢复到某个正常状态。</p>
+<ul>
+<li>撤销修改，但还没有添加到暂存区：<code>git checkout -- filename</code>修改的文件会被恢复到上次提交时的状态，修改的内容会丢失。</li>
+<li>版本回退：先通过<code>git reflog</code>找到某个版本的<code>commit_id</code>，然后用<code>git reset --hard commit_id</code>将工作目录的文件恢复到指定的版本。</li>
+<li>恢复工作区中被删除的文件（文件之前被提交到仓库中）：<code>git checkout -- filename</code>或<code>git checkout -f</code>。</li>
+</ul>
+<h4 id="备份工作区"><a href="#备份工作区" class="headerlink" title="备份工作区"></a>备份工作区</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git stash			       #将工作区文件保存在Git内部栈中</span><br><span class="line">git stash list			  #列出Git内部栈中保存的工作区文件列表</span><br><span class="line">git stash apply stash_id	#恢复工作区到指定的内部栈状态</span><br><span class="line">git stash pop			   #恢复工作区到上一个内部栈状态</span><br><span class="line">git stash clear			 #清空Git内部栈</span><br></pre></td></tr></table></figure>
+<p>如果正在一个<code>develop</code>分支上正在开发新功能，但这时<code>master</code>分支(稳定版本)突然发现了<code>bug</code>，并需要及时修复，而<code>develop</code>分支此时的工作还没有完成，且不希望将之前的工作就这样提交到仓库中时，这时就可以用<code>git stash</code>来暂时保存这些状态到<code>Git</code>内部栈中，并用当前分支上一次的提交内容来恢复工作目录，然后切换到<code>master</code>分支进行<code>bug</code>修复工作，等修复完毕并提交到仓库上后，再使用<code>git stash apply [stash@{0}]</code>或者<code>git stash pop</code>将工作目录恢复到之前的状态，继续之前的工作。  </p>
+<p>同时也可以多次使用<code>git stash</code>将未提交的代码压入到<code>Git</code>栈中，但当多次使用<code>git stash</code>命令后，<code>Git</code>栈里将充满了未提交的代码，这时候到底要用哪个版本来恢复工作目录呢？<code>git stash list</code>命令可以将当前的<code>Git</code>栈信息打印出来，我们只需要将找到对应的版本号，例如使用<code>git stash apply stash@{1}</code>就可以用版本号为<code>stash@{1}</code>的内容来恢复工作目录。  </p>
+<p>当<code>Git</code>栈中所有的内容都被恢复后，可以使用<code>git stash clear</code>来将栈清空。</p>
+<blockquote bgcolor="#FF4500"><br>实用技巧：当手头工作没有完成时，先把工作现场<code>git stash</code>一下，然后去修复bug，修复后，再使用<code>git stash pop</code>，回到工作现场.<br></blockquote>
+
+<h4 id="将当前工作区目录文件压缩归档"><a href="#将当前工作区目录文件压缩归档" class="headerlink" title="将当前工作区目录文件压缩归档"></a>将当前工作区目录文件压缩归档</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git archive --format=zip -o arch.zip HEAD</span><br><span class="line">git arch --format zip head&gt;arch.zip</span><br></pre></td></tr></table></figure>
+<h4 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h4><p><code>Git</code>相比其他版本控制软件的一个优点就是大多数的操作都可以在本地进行，而不用管远程的仓库，因为操作是在本地，且操作的数据也是在本地，加上指针等原因，所以执行的速度就会比较快。 在多人协作的项目中，就需要涉及与远程仓库交互的问题，主要是如何从远程仓库抓取最新数据合并到自己的本地分支上，将自己的最新成果分享给其他人或让别人审查等 。</p>
+<h4 id="远程仓库的克隆、添加、查看"><a href="#远程仓库的克隆、添加、查看" class="headerlink" title="远程仓库的克隆、添加、查看"></a>远程仓库的克隆、添加、查看</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">git remote	#显示已添加的远程仓库名</span><br><span class="line">git remote -v 	#显示已添加的远程仓库名和地址</span><br><span class="line">git remote add 远程仓库名 远程仓库地址	#在本地添加远程仓库</span><br><span class="line">git remote rm 远程仓库名			#删除本地添加的远程仓库名</span><br><span class="line">git remote rename 原名 新名		#重命名远程仓库名</span><br><span class="line">git clone 远程仓库地址 [克隆到指定的文件夹]	#克隆远程仓库到本地</span><br><span class="line">git fetch 远程仓库名		#从远程仓库抓取最新数据到本地但不与本地分支进行合并</span><br><span class="line">git pull 远程仓库名	本地要合并的分支名	#从远程仓库抓取最新数据并自动与本地分支进行合并</span><br><span class="line">git push 远程仓库名 本地分支名	#将本地仓库推送到远程仓库中</span><br><span class="line">git remote show 远程仓库名	#查看远程仓库信息</span><br><span class="line">git remote show			#查看所有远程仓库</span><br><span class="line">git push 远程仓库名 标签名	#将标签推送到远程仓库（Git默认不推送标签）</span><br></pre></td></tr></table></figure>
+<h4 id="协同流程"><a href="#协同流程" class="headerlink" title="协同流程"></a>协同流程</h4><ul>
+<li><code>Fork</code>远程项目</li>
+<li>把<code>Fork</code>的项目<code>clone</code>到本地</li>
+<li><p>执行以下命令，将别人的库添加为远端库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add 远端仓库名 远端的分支</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行以下命令，拉去合并到本地，在本地编辑内容前必须执行pull操作同步别人的远端库（这样避免冲突）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull 远端仓库名 远端分支名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编辑内容</p>
+</li>
+<li><code>commit</code>之后<code>push</code>到自己的库</li>
+<li>登录<code>Github</code>，在你的首页可以看到一个<code>pull request</code>按钮，点击它，填写一些说明信息，提交即可</li>
+</ul>
+<h4 id="多人协作技巧"><a href="#多人协作技巧" class="headerlink" title="多人协作技巧"></a>多人协作技巧</h4><p>看远程库信息，使用<code>git remote -v</code>；<br>本地新建的分支如果不推送到远程，对其他人就是不可见的；<br>从本地推送分支，使用<code>git push 远程仓库名 分支名</code>，如果推送失败，先用<code>git pull</code>抓取远程的新提交；<br>在本地创建和远程分支对应的分支，使用<code>git checkout -b branch-name origin/branch-name</code>，本地和远程分支的名称最好一致；<br>建立本地分支和远程分支的关联，使用<code>git branch --set-upstream branch-name origin/branch-name</code>；<br>从远程抓取分支，使用<code>git pull</code>，如果有冲突，要先处理冲突。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/73f1724d.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/paimon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="栾铸显的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/post/73f1724d.html" itemprop="url">自动备份Hexo博客文件</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-09T17:46:34+08:00">
+                2018-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">Hexo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/post/73f1724d.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="http://yoursite.com/post/73f1724d.html" itemprop="commentCount">0</span> comments
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/post/73f1724d.html" class="leancloud_visitors" data-flag-title="自动备份Hexo博客文件">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>每次更新博文都需要输入两三行重复的Git命令比较麻烦，下面介绍一种自动备份Hexo博客源文件的方法。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>通过通过监听<code>Hexo</code>的事件来完成自动执行Git命令完成自动备份。通过查阅<a href="https://hexo.io/zh-cn/api/events.html" target="_blank" rel="noopener">Hexo文档</a>，找到了<code>Hexo</code>的主要事件，见下表：</p>
+<table>
+<thead>
+<tr>
+<th>事件名</th>
+<th>事件发生时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>deployBefore</td>
+<td>在部署完成前发布</td>
+</tr>
+<tr>
+<td>deployAfter</td>
+<td>在部署成功后发布</td>
+</tr>
+<tr>
+<td>exit</td>
+<td>在 Hexo 结束前发布</td>
+</tr>
+<tr>
+<td>generateBefore</td>
+<td>在静态文件生成前发布</td>
+</tr>
+<tr>
+<td>generateAfter</td>
+<td>在静态文件生成后发布</td>
+</tr>
+<tr>
+<td>new</td>
+<td>在文章文件建立后发布</td>
+</tr>
+</tbody>
+</table>
+<p>于是我们就可以通过监听<code>Hexo</code>的<code>deployAfter</code>事件，待上传完成之后自动运行<code>Git</code>备份命令，从而达到自动备份的目的。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><h4 id="将Hexo目录加入Git仓库"><a href="#将Hexo目录加入Git仓库" class="headerlink" title="将Hexo目录加入Git仓库"></a>将Hexo目录加入Git仓库</h4><p>在<code>Github</code>下创建一个新的<code>repository</code>，取名为<code>HEXO</code>。(与本地的Hexo源码文件夹同名即可)<br>进入本地的<code>Hexo</code>文件夹，执行以下命令创建仓库:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
+<p>设置远程仓库地址，并更新：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@github.com:xxx/hexo.git</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure></p>
+<p>修改<code>.gitignore</code>文件（如果没有请手动创建一个），在里面加入<code>*.log</code>和 <code>public/</code>以及<code>.deploy*/</code>。因为每次执行<code>hexo generate</code>命令时，上述目录都会被重写更新。因此忽略这两个目录下的文件更新，加快push速度。</p>
+<p>执行命令以下命令，完成<code>Hexo</code>源码在本地的提交，并将本地的仓库文件推送到<code>Github</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m &quot;添加hexo源码文件作为备份&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure></p>
+<h4 id="安装shelljs模块"><a href="#安装shelljs模块" class="headerlink" title="安装shelljs模块"></a>安装shelljs模块</h4><p>要实现这个自动备份功能，需要依赖<code>NodeJs</code>的一个<code>shelljs</code>模块,该模块重新包装了<code>child_process</code>,调用系统命令更加的方便。<br>在命令中键入以下命令，完成<code>shelljs</code>模块的安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save shelljs</span><br></pre></td></tr></table></figure></p>
+<h4 id="编写自动备份脚本"><a href="#编写自动备份脚本" class="headerlink" title="编写自动备份脚本"></a>编写自动备份脚本</h4><p>模块安装完成，在<code>Hexo</code>根目录的<code>scripts</code>文件夹下新建一个js文件，文件名随意取。（如果没有scripts目录，请新建一个。）<br>然后在脚本中，写入以下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">require(&apos;shelljs/global&apos;);</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">  hexo.on(&apos;deployAfter&apos;, function() &#123;//当deploy完成后执行备份</span><br><span class="line">    run();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125; catch (e) &#123;</span><br><span class="line">  console.log(&quot;Error:&quot; + e.toString());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function run() &#123;</span><br><span class="line">  if (!which(&apos;git&apos;)) &#123;</span><br><span class="line">    echo(&apos;Sorry, this script requires git&apos;);</span><br><span class="line">    exit(1);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    echo(&quot;======================Auto Backup Begin===========================&quot;);</span><br><span class="line">    cd(&apos;/Users/666/Desktop/code/project/Blog&apos;);    //此处修改为Hexo根目录路径</span><br><span class="line">    if (exec(&apos;git add --all&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git add failed&apos;);</span><br><span class="line">      exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    if (exec(&apos;git commit -am &quot;Form auto backup script\&apos;s commit&quot;&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git commit failed&apos;);</span><br><span class="line">      exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    if (exec(&apos;git push origin master&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git push failed&apos;);</span><br><span class="line">      exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    echo(&quot;==================Auto Backup Complete============================&quot;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>cd(&#39;/Users/666/Desktop/code/project/Blog&#39;)</code>路径为本地<code>Hexo</code>的根目录路径。</li>
+<li>如果你的Git远程仓库名称不为<code>origin</code>的话，还需要修改执行的<code>push</code>命令，修改成自己的远程仓库名和相应的分支名。</li>
+</ul>
+<p>保存脚本并退出，然后执行<code>hexo deploy</code>命令，将会得到类似以下结果：</p>
+<pre><code>
+</code></pre><p>这样子，每次更新博文并<code>deploy</code>到服务器上之后，备份就自动启动并完成备份啦~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/73f1724d.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/paimon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="栾铸显的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/post/73f1724d.html" itemprop="url">Hexo添加文章时自动打开编辑器</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-09T17:46:34+08:00">
+                2018-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">Hexo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/post/73f1724d.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="http://yoursite.com/post/73f1724d.html" itemprop="commentCount">0</span> comments
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/post/73f1724d.html" class="leancloud_visitors" data-flag-title="Hexo添加文章时自动打开编辑器">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在<code>Hexo</code>中新建一篇博文非常简单，只需要在命令行中键入以下命令然后回车即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;The title of your blog&quot;</span><br></pre></td></tr></table></figure></p>
+<p>此后<code>Hexo</code>便会在<code>Hexo</code>的根目录的<code>source</code>文件夹下的<code>_posts</code>目录下自动帮你创建相应的md文件。然后我们打开该目录，找到刚刚<code>Hexo</code>自动生成的文件打开编辑即可。</p>
+<p>但是当我们的博文比较多，这样我们就需要在成堆的<code>Markdown</code>文件中找到刚才自动生成的文件，这样做显然是一件比较痛苦的事情。下面介绍一种添加文章时自动打开编辑器的方法。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>利用<code>NodeJS</code>的事件监听机制实现监听<code>Hexo</code>的<code>new</code>事件来启动编辑器，完成自动启动编辑器的操作。  </p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><ul>
+<li>首先在<code>Hexo</code>目录下的<code>scripts</code>目录中创建一个 JavaScript 脚本文件。</li>
+<li>如果没有这个<code>scripts</code>目录，则新建一个。</li>
+<li><code>scripts</code>目录新建的 JavaScript 脚本文件可以任意取名。</li>
+</ul>
+<p>通过这个脚本，我们用其来监听<code>hexo new</code>这个动作，并在检测到<code>hexo new</code>之后，执行编辑器打开的命令。</p>
+<p>如果你是<code>Windows</code>平台的<code>Hexo</code>用户，则将下列内容写入你的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var spawn = require(&apos;child_process&apos;).exec;</span><br><span class="line"></span><br><span class="line">// Hexo 2.x 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(path)&#123;</span><br><span class="line">  spawn(&apos;start  &quot;markdown编辑器绝对路径.exe&quot; &apos; + path);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// Hexo 3 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(data)&#123;</span><br><span class="line">  spawn(&apos;start  &quot;markdown编辑器绝对路径.exe&quot; &apos; + data.path);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>如果你是<code>Mac</code>平台<code>Hexo</code>用户，则将下列内容写入你的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var exec = require(&apos;child_process&apos;).exec;</span><br><span class="line"></span><br><span class="line">// Hexo 2.x 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(path)&#123;</span><br><span class="line">    exec(&apos;open -a &quot;markdown编辑器绝对路径.app&quot; &apos; + path);</span><br><span class="line">&#125;);</span><br><span class="line">// Hexo 3 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(data)&#123;</span><br><span class="line">    exec(&apos;open -a &quot;markdown编辑器绝对路径.app&quot; &apos; + data.path);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>保存并退出脚本之后，在命令行中键入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;auto open editor test&quot;</span><br></pre></td></tr></table></figure></p>
+<p>就可以顺利的自动打开自动生成的md文件啦~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/df6058cd.html">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -388,19 +985,269 @@
 <p>拉取 Next 代码并存放到 themes/next 目录下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure></p>
 <p> 修改站点_config.yml 文件主题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure></p>
 <h2 id="配置主题"><a href="#配置主题" class="headerlink" title="配置主题"></a>配置主题</h2><p>接下来我们就可以来按需配置主题内容了，所有内容都在themes/next文件夹下的config.yml文件里修改。  </p>
-<h4 id="菜单栏"><a href="#菜单栏" class="headerlink" title="菜单栏"></a>菜单栏</h4><p>原生菜单栏有主页、关于、分类、标签等数个选项，但是在配置文件中是注释掉的状态，这里我们自行修改注释就行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line"> home: / || home</span><br><span class="line"> # about: /about/ || user</span><br><span class="line"> tags: /tags/ || tags</span><br><span class="line"> categories: /categories/ || th</span><br><span class="line"> archives: /archives/ || archive</span><br><span class="line"> # schedule: /schedule/ || calendar</span><br><span class="line"> # sitemap: /sitemap.xml || sitemap</span><br><span class="line"> # commonweal: /404/ || heartbeat</span><br></pre></td></tr></table></figure></p>
+<h3 id="菜单栏"><a href="#菜单栏" class="headerlink" title="菜单栏"></a>菜单栏</h3><p>原生菜单栏有主页、关于、分类、标签等数个选项，但是在配置文件中是注释掉的状态，这里我们自行修改注释就行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line"> home: / || home</span><br><span class="line"> # about: /about/ || user</span><br><span class="line"> tags: /tags/ || tags</span><br><span class="line"> categories: /categories/ || th</span><br><span class="line"> archives: /archives/ || archive</span><br><span class="line"> # schedule: /schedule/ || calendar</span><br><span class="line"> # sitemap: /sitemap.xml || sitemap</span><br><span class="line"> # commonweal: /404/ || heartbeat</span><br></pre></td></tr></table></figure></p>
 <p>注意点：</p>
 <ul>
 <li>如果事先没有通过hexo new page <pagename>来创建页面的话，即使在配置文件中取消注释，页面也没法显示</pagename></li>
 <li>|| 后面是fontAwesome里的文件对应的名称</li>
 <li>menu_icons记得选enable: true（默认应该是true）</li>
 </ul>
-<h4 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h4><p>修改主题_config.yml 文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avatar: http://....  # 头像的URL或路径</span><br></pre></td></tr></table></figure></p>
-<h4 id="主题风格"><a href="#主题风格" class="headerlink" title="主题风格"></a>主题风格</h4><p>主题提供了4个，我们把想要选择的取消注释，其他三个保持注释掉的状态即可。</p>
-<h4 id="底部建站时间和图标修改"><a href="#底部建站时间和图标修改" class="headerlink" title="底部建站时间和图标修改"></a>底部建站时间和图标修改</h4><h4 id="个人社交信息"><a href="#个人社交信息" class="headerlink" title="个人社交信息"></a>个人社交信息</h4><p>在 social 里我们可以自定义自己想要在个人信息部分展现的账号，同时给他们加上图标。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">social:</span><br><span class="line">  GitHub: https://github.com/XuQuan-nikkkki || github</span><br><span class="line">  E-Mail: mailto:xuquan1225@hotmail.com || envelope</span><br><span class="line">  #Google: https://plus.google.com/yourname || google</span><br><span class="line">  #Twitter: https://twitter.com/yourname || twitter</span><br><span class="line">  #FB Page: https://www.facebook.com/yourname || facebook</span><br></pre></td></tr></table></figure></p>
-<h4 id="网站动画效果"><a href="#网站动画效果" class="headerlink" title="网站动画效果"></a>网站动画效果</h4><p>开关网站的动画。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motion:</span><br><span class="line">  enable: false</span><br></pre></td></tr></table></figure></p>
+<h3 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h3><p>修改主题_config.yml 文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avatar: http://....  # 头像的URL或路径</span><br></pre></td></tr></table></figure></p>
+<h3 id="主题风格"><a href="#主题风格" class="headerlink" title="主题风格"></a>主题风格</h3><p>主题提供了4个，我们把想要选择的取消注释，其他三个保持注释掉的状态即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Schemes</span><br><span class="line"># scheme: Muse</span><br><span class="line"># scheme: Mist</span><br><span class="line"># scheme: Pisces</span><br><span class="line">scheme: Gemini</span><br></pre></td></tr></table></figure></p>
+<h3 id="底部建站时间和图标修改"><a href="#底部建站时间和图标修改" class="headerlink" title="底部建站时间和图标修改"></a>底部建站时间和图标修改</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">footer:</span><br><span class="line">  # Specify the date when the site was setup.</span><br><span class="line">  # If not defined, current year will be used.</span><br><span class="line">  since: 2018</span><br><span class="line"></span><br><span class="line">  # Icon between year and copyright info.</span><br><span class="line">  icon: envira</span><br><span class="line"></span><br><span class="line">  # If not defined, will be used `author` from Hexo main config.</span><br><span class="line">  copyright:</span><br><span class="line">  # -------------------------------------------------------------</span><br><span class="line">  # Hexo link (Powered by Hexo).</span><br><span class="line">  powered: false</span><br><span class="line"></span><br><span class="line">  theme:</span><br><span class="line">    # Theme &amp; scheme info link (Theme - NexT.scheme).</span><br><span class="line">    enable: false</span><br><span class="line">    # Version info of NexT after scheme info (vX.X.X).</span><br><span class="line">    version: false</span><br><span class="line">  #</span><br></pre></td></tr></table></figure>
+<p>我在这部分做了这样几件事，使底部信息更简单：</p>
+<ul>
+<li>把用户的图标从 user 改成了 envira</li>
+<li>copyright 留空</li>
+<li>powered 设为 false 把 hexo 的授权图片取消了</li>
+<li>theme 的 enable 设为 false 把主题的内容也取消了</li>
+</ul>
+<h3 id="统计文章字数和阅读时间"><a href="#统计文章字数和阅读时间" class="headerlink" title="统计文章字数和阅读时间"></a>统计文章字数和阅读时间</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">post_wordcount:</span><br><span class="line">  item_text: true</span><br><span class="line">  wordcount: false  # 文章字数</span><br><span class="line">  min2read: false   # 阅读时间</span><br><span class="line">  totalcount: false # 总共字数</span><br><span class="line">  separated_meta: true</span><br></pre></td></tr></table></figure>
+<p>我在这里关闭了字数统计，使底部信息更简单  </p>
+<h3 id="个人社交信息"><a href="#个人社交信息" class="headerlink" title="个人社交信息"></a>个人社交信息</h3><p>在 social 里我们可以自定义自己想要在个人信息部分展现的账号，同时给他们加上图标。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">social:</span><br><span class="line">  GitHub: https://github.com/yourname || github</span><br><span class="line">  E-Mail: mailto:xxx@hotmail.com || envelope</span><br><span class="line">  #Google: https://plus.google.com/yourname || google</span><br><span class="line">  #Twitter: https://twitter.com/yourname || twitter</span><br><span class="line">  #FB Page: https://www.facebook.com/yourname || facebook</span><br></pre></td></tr></table></figure></p>
+<h3 id="网站动画效果"><a href="#网站动画效果" class="headerlink" title="网站动画效果"></a>网站动画效果</h3><p>开关网站的动画。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motion:</span><br><span class="line">  enable: false</span><br></pre></td></tr></table></figure></p>
 <p>主题自带四种动画效果，可以选自己喜欢的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">motion:</span><br><span class="line">  enable: true</span><br><span class="line">  async: true</span><br><span class="line"></span><br><span class="line"># Canvas-nest</span><br><span class="line">canvas_nest: true</span><br><span class="line"></span><br><span class="line"># three_waves</span><br><span class="line">three_waves: false</span><br><span class="line"></span><br><span class="line"># canvas_lines</span><br><span class="line">canvas_lines: false</span><br><span class="line"></span><br><span class="line"># canvas_sphere</span><br><span class="line">canvas_sphere: false</span><br></pre></td></tr></table></figure></p>
-<h4 id="添加评论"><a href="#添加评论" class="headerlink" title="添加评论"></a>添加评论</h4><h4 id="统计文章字数和阅读时间"><a href="#统计文章字数和阅读时间" class="headerlink" title="统计文章字数和阅读时间"></a>统计文章字数和阅读时间</h4><h4 id="统计阅读次数"><a href="#统计阅读次数" class="headerlink" title="统计阅读次数"></a>统计阅读次数</h4>
+<h3 id="添加评论"><a href="#添加评论" class="headerlink" title="添加评论"></a>添加评论</h3><h3 id="统计阅读次数"><a href="#统计阅读次数" class="headerlink" title="统计阅读次数"></a>统计阅读次数</h3><p><a href="">Next主题添加文章阅读量统计功能</a></p>
+<h3 id="SEO-优化"><a href="#SEO-优化" class="headerlink" title="SEO 优化"></a>SEO 优化</h3><p>next 提供了 seo 优化选项，在主题配置文件 <code>_config.yml</code> 中有个选项是 seo，设置成 true 即开启了 seo 优化，会进行一些 seo 优化。<br>百度无法搜索到博客信息，是因为 Github Pages 屏蔽了百度爬虫，所以我将博客同步到两个平台上，一个 <a href="https://github.com/" target="_blank" rel="noopener">Github</a>，一个国内的 <a href="https://coding.net/" target="_blank" rel="noopener">Coding</a>。</p>
+<h3 id="添加-robots-txt"><a href="#添加-robots-txt" class="headerlink" title="添加 robots.txt"></a>添加 robots.txt</h3><p>robots.txt 是搜索引擎蜘蛛协议，告诉引擎哪些要收录，哪些禁止收录。<br>source 文件下新建 robots.txt，内容如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Allow: /</span><br><span class="line">Allow: /categories/</span><br><span class="line">Allow: /tags/</span><br><span class="line">Allow: /archives/</span><br><span class="line">Disallow: /js/</span><br><span class="line">Disallow: /css/</span><br><span class="line">Disallow: /fonts/</span><br><span class="line">Disallow: /vendors/</span><br><span class="line">Disallow: /fancybox/</span><br><span class="line"></span><br><span class="line">Sitemap: https://luanzhuxian.github.io/sitemap.xml</span><br><span class="line">Sitemap: https://luanzhuxian.github.io/baidusitemap.xml</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加自定义js-css文件"><a href="#添加自定义js-css文件" class="headerlink" title="添加自定义js/css文件"></a>添加自定义js/css文件</h3><ul>
+<li>首先把<code>js</code>文件放在<code>\themes\next\source\js\src</code>文件目录下</li>
+<li>首先把<code>css</code>文件放在<code>\themes\next\source\css\src</code>文件目录下</li>
+<li>找到<code>\themes\next\layout</code>目录下的布局文件<code>_layout.swig</code></li>
+<li>把引用代码加入到该文件中即可<code>&lt;script type=&quot;text/javascript&quot; src=&quot;/js/src/xxx.js&quot;&gt;&lt;/script&gt;</code></li>
+<li>也可以在<code>\themes\next\source\css\_custom\custom.styl</code>文件中进行样式的添加</li>
+</ul>
+<h2 id="第三方插件"><a href="#第三方插件" class="headerlink" title="第三方插件"></a>第三方插件</h2><h3 id="博客压缩-hexo-all-minifier"><a href="#博客压缩-hexo-all-minifier" class="headerlink" title="博客压缩 ??? hexo-all-minifier"></a>博客压缩 ??? hexo-all-minifier</h3><h3 id="上传图片到七牛云"><a href="#上传图片到七牛云" class="headerlink" title="上传图片到七牛云 ???"></a>上传图片到七牛云 ???</h3><p>在markdown中写blog的朋友，想必这点是最烦恼的吧，一般来说都要手动上传图片到七牛云，再把链接写到markdown中。</p>
+<ul>
+<li>有人用phthon实现一个自动上传的脚本，</li>
+<li>在github上找到一个一键贴图工具<a href="https://github.com/jiwenxing/qimage-mac" target="_blank" rel="noopener">qiniu-image-tool</a>，它支持本地文件、截图、网络图片一键上传七牛云并返回图片引用。Mac 是基于 Alfred 的，其 windows 也有相应版本windows版本。</li>
+</ul>
+<h3 id="将博客同时部署到-github-和-coding"><a href="#将博客同时部署到-github-和-coding" class="headerlink" title="将博客同时部署到 github 和 coding ???"></a>将博客同时部署到 github 和 coding ???</h3><p>按照其要求配置好以后，用截图软件截图后，或者本地图片后 copy，然后直接按设置好的 command+option+v，然后在图片成功上传到七牛云图床上，剪贴板上也有相应的连接。</p>
+<h3 id="hexo-abbrlink-链接持久化"><a href="#hexo-abbrlink-链接持久化" class="headerlink" title="hexo-abbrlink 链接持久化"></a>hexo-abbrlink 链接持久化</h3><p>大家知道<code>hexo</code>默认的链接是 <code>http://xxx.yy.com/2018/07/14/hello-world</code> 这种类型的，这源于站点目录下的配置 <code>_config.yml</code> 里的配置 <code>:permalink: :year/:month/:day/:title/</code>，这种默认配置的缺点就是一般文件名是中文，导致<code>url</code>链接里有中文出现，这会造成很多问题，如使用<code>gitment</code>，也不利于<code>SEO</code>，另外年月日都会有分隔符。<br><code>hexo-abbrlink</code>这个插件，猜测是根据时间点算出的最终链接，这样就确保了博文链接的唯一化，只要不修改<code>md</code>文件的<code>abbrlink</code>的值，<code>url</code>就永久不会改变。如此<code>md</code>文件名和文件内容也可以随便改了。后面的层级更短，这样也有利于<code>SEO</code>优化。</p>
+<ul>
+<li><p>安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-abbrlink --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：<br>站点配置文件里:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">permalink: post/:abbrlink.html</span><br><span class="line">abbrlink:</span><br><span class="line"> alg: crc32  # 算法：crc16(default) and crc32</span><br><span class="line"> rep: hex    # 进制：dec(default) and hex</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>另外可以修改<code>scaffolds</code>里的模版文件，修改<code>post.md</code>为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">comments: true</span><br><span class="line">categories:</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
+<p><blockquote bgcolor="#FF4500"><br>百度蜘蛛抓取网页的规则: 对于蜘蛛说网页权重越高、信用度越高抓取越频繁，例如网站的首页和内页。蜘蛛先抓取网站的首页，因为首页权重更高，并且大部分的链接都是指向首页。然后通过首页抓取网站的内页，并不是所有内页蜘蛛都会去抓取。<br></blockquote><br>搜索引擎认为对于一般的中小型站点，3层足够承受所有的内容了，所以蜘蛛经常抓取的内容是前三层，而超过三层的内容蜘蛛认为那些内容并不重要，所以不经常爬取。出于这个原因所以permalink后面跟着的最好不要超过2个斜杠。</p>
+<h3 id="hexo-autonofollow"><a href="#hexo-autonofollow" class="headerlink" title="hexo-autonofollow"></a>hexo-autonofollow</h3><p>nofollow 标签是由谷歌领头创新的一个反垃圾链接的标签，并被百度、yahoo 等各大搜索引擎广泛支持，引用 nofollow 标签的目的是：用于指示搜索引擎不要追踪（即抓取）网页上的带有 nofollow 属性的任何出站链接，以减少垃圾链接的分散网站权重。<br>这里推荐 <code>hexo-autonofollow</code> 插件来解决。  </p>
+<ul>
+<li><p>安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-autonofollow  --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：<br>在站点配置文件中添加以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nofollow:</span><br><span class="line">  enable: true</span><br><span class="line">  exclude: # 例外的链接，可将友情链接放置此处</span><br><span class="line">  - exclude1.com</span><br><span class="line">  - exclude2.com</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="hexo-douban"><a href="#hexo-douban" class="headerlink" title="hexo-douban"></a>hexo-douban</h3><p><a href="https://github.com/mythsman/hexo-douban" target="_blank" rel="noopener"><code>hexo-douban</code></a> 插件可以在博客中添加豆瓣电影、读书和游戏页面，关联我们自己的账号。  </p>
+<ul>
+<li><p>安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-douban --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：<br>在 hexo 根目录下的 config.yml 文件中添加如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">douban:</span><br><span class="line">  user: 你的豆瓣userid</span><br><span class="line">  builtin: false</span><br><span class="line">  book:</span><br><span class="line">    title: &apos;This is my book title&apos;</span><br><span class="line">    quote: &apos;This is my book quote&apos;</span><br><span class="line">  movie:</span><br><span class="line">    title: &apos;This is my movie title&apos;</span><br><span class="line">    quote: &apos;This is my movie quote&apos;</span><br><span class="line">  game:</span><br><span class="line">    title: &apos;This is my game title&apos;</span><br><span class="line">    quote: &apos;This is my game quote&apos;</span><br><span class="line">  timeout: 10000</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>title 和 quote 后面的内容会分别作为电影/读书/游戏页面的标题和副标题（引言）呈现在博客里。<br>user 就写我们豆瓣的 id，可以在我的豆瓣页面中找到。builtin 指是否将生成页面功能嵌入 hexo s 和 hexo g 中，建议选 false，因为true会导致页面每次启动本地服务器都需要很长时间生成豆瓣页面。  </p>
+<ul>
+<li><p>生成页面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo douban   #生成读书、电影、游戏三个页面</span><br><span class="line">hexo douban -b  #生成读书页面</span><br><span class="line">hexo douban -m  #生成电影页面</span><br><span class="line">hexo douban -g  #生成游戏页面</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在博客中生成页面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo new page books</span><br><span class="line">hexo new page movies</span><br><span class="line">hexo new page games</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在博客中添加页面：<br>在menu部分添加我们需要添加的页面名称和相对路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: /</span><br><span class="line">  categories: /categories/</span><br><span class="line">  archives: /archives/</span><br><span class="line">  Books: /books/     #This is your books page</span><br><span class="line">  Movies: /movies/   #This is your movies page</span><br><span class="line">  Games: /games/     #This is your games page</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/73f1724d.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/paimon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="栾铸显的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/post/73f1724d.html" itemprop="url">Next主题添加文章阅读量统计功能</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-09T17:46:34+08:00">
+                2018-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">Hexo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/post/73f1724d.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="http://yoursite.com/post/73f1724d.html" itemprop="commentCount">0</span> comments
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/post/73f1724d.html" class="leancloud_visitors" data-flag-title="Next主题添加文章阅读量统计功能">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>基于<a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a>这家服务提供商，实现<code>Hexo</code>博客文章的浏览数统计功能。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p><code>Next</code>主题目前已经合并这个功能，可以直接使用不用修改主题模版而直接在<code>_config.yml</code>中配置即可。</p>
+<h3 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置LeanCloud</h3><p>在注册完成<code>LeanCloud</code>帐号并验证邮箱之后，我们就可以登录帐号，进行一番配置之后拿到<code>AppID</code>以及<code>AppKey</code>这两个参数即可正常使用文章阅读量统计的功能了。</p>
+<p>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台，如下图所示：</p>
+<p>在出现的界面点击创建应用：</p>
+<p>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的:</p>
+<p>这里为了演示的方便，我新创建一个取名为<code>Hexo</code>的应用。创建完成之后我们点击新创建的应用的名字来进行该应用的参数配置：</p>
+<p>在应用的数据配置界面，左侧数据栏下，下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。点击顶部的加号图标，新建Class：</p>
+<p>在弹出的选项中选择创建Class来新建Class用来专门保存我们博客的文章访问量等数据:<br>点击创建Class之后，为了保证我们前面对NexT主题的修改兼容，此处的<font color="red">Class名称必须为Counter</font>:</p>
+<p>由于<code>LeanCloud</code>升级了默认的ACL权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择无限制。</p>
+<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击最左侧菜单栏的设置:<br>在设置界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>AppID</code>以及<code>AppKey</code>，有了它，我们就有权限能够通过主题中配置好的<code>Javascript</code>代码与这个应用的<code>Counter</code>表进行数据存取操作了:</p>
+<p>复制<code>AppID</code>以及<code>AppKey</code>并在<code>Next</code>主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz</span><br><span class="line">  app_key: qODRtEtDSVo4Mxj6DkhVAqd9</span><br></pre></td></tr></table></figure></p>
+<p>这个时候重新生成部署<code>Hexo</code>博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的发布日期以及文章的标题，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
+<h3 id="Web安全"><a href="#Web安全" class="headerlink" title="Web安全"></a>Web安全</h3><p>因为<code>AppID</code>以及<code>AppKey</code>是暴露在外的，因此如果一些别用用心之人知道了之后用于其它目的是得不偿失的，为了确保只用于我们自己的博客，建议开启<code>Web安全选项</code>，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。</p>
+<p>在设置界面中，选择<code>安全中心</code>选项，<code>服务开关</code>部分只开启<code>数据存储</code>。<code>Web安全域名</code>下面要添加你的<code>Github Page</code>域名，来确保数据调用的安全:</p>
+<h3 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h3><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们<code>LeanCloud</code>对应的应用的<code>Counter</code>表中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter</code>表中。</p>
+<ul>
+<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
+<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
+<li>其他字段皆为自动生成，具体作用请查阅<code>LeanCloud</code>官方文档，如果你不知道有什么作用请不要随意修改。</li>
+</ul>
+
           
         
       
@@ -562,30 +1409,30 @@
       
         
           
-            <blockquote bgcolor="#FF4500"><a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页</blockquote>
+            <blockquote bgcolor="#FF4500"><br><a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页<br></blockquote>
 
-<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><h4 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h4><p>作用：用来生成静态页面的<br><a href="https://nodejs.org/" target="_blank" rel="noopener">官网下载</a>并安装。安装成功后可用 <code>node -v</code> 查看版本号。</p>
-<h4 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h4><p>作用：把本地的hexo内容提交到github上去<br>mac安装Xcode自带有Git，windows可去<a href="https://git-scm.com/" target="_blank" rel="noopener">官网下载</a>。<br>安装完成后，还需要最后一步设置，在命令行输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">"Your Name"</span></span><br><span class="line">$ git config --global user.email <span class="string">"email@example.com"</span></span><br></pre></td></tr></table></figure></p>
-<p>因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。安装成功后可用 <code>git --version</code> 查看版本号。</p>
-<h4 id="申请GitHub"><a href="#申请GitHub" class="headerlink" title="申请GitHub"></a>申请GitHub</h4><p>作用：用来做博客的远程创库、域名、服务器<br><a href="https://github.com/" target="_blank" rel="noopener">github</a>注册账号。</p>
-<h2 id="安装并本地部署Hexo"><a href="#安装并本地部署Hexo" class="headerlink" title="安装并本地部署Hexo"></a>安装并本地部署Hexo</h2><p>执行如下命令安装Hexo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure></p>
-<p>创建一个文件夹，用来存放hexo的配置文件，进入该文件夹<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init &lt;folder&gt;</span><br><span class="line"><span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure></p>
-<p>现在项目根目录结构如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml // 博客的配置信息，你可以在此配置大部分的参数。</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds // 模板文件夹。当你新建文章时，Hexo会根据scaffold来建立文件。</span><br><span class="line">├── <span class="built_in">source</span> // 存放用户资源的地方</span><br><span class="line">|   ├── _drafts</span><br><span class="line">|   └── _posts</span><br><span class="line">└── themes // 存放博客的主题。Hexo会根据主题来生成静态页面。</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><h3 id="申请GitHub"><a href="#申请GitHub" class="headerlink" title="申请GitHub"></a>申请GitHub</h3><p>作用：用来做博客的远程创库、域名、服务器<br><a href="https://github.com/" target="_blank" rel="noopener">Github</a>注册账号。</p>
+<h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><p>作用：用来生成静态页面的<br><a href="https://nodejs.org/" target="_blank" rel="noopener">官网下载</a>并安装。安装成功后可用 <code>node -v</code> 查看版本号。</p>
+<h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><p>作用：把本地的 Hexo 内容提交到 Github 上去<br>Mac 安装 Xcode 自带有 Git，WSindows 可去<a href="https://git-scm.com/" target="_blank" rel="noopener">官网下载</a>。<br>安装完成后，还需要设置你 Github 的用户名密码，在命令行输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">"Your Name"</span></span><br><span class="line">$ git config --global user.email <span class="string">"email@example.com"</span></span><br></pre></td></tr></table></figure></p>
+<p>因为 Git 是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和 Email 地址。安装成功后可用 <code>git --version</code> 查看版本号。</p>
+<h2 id="安装并本地部署Hexo"><a href="#安装并本地部署Hexo" class="headerlink" title="安装并本地部署Hexo"></a>安装并本地部署Hexo</h2><p>执行如下命令安装 Hexo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure></p>
+<p>创建一个文件夹，用来存放 Hexo 的配置文件，进入该文件夹<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init &lt;folder&gt;</span><br><span class="line"><span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure></p>
+<p>现在项目根目录结构如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── public // 执行 hexo generate 命令，输出的静态网页内容目录</span><br><span class="line">├── scaffolds // 模板文件夹。当你新建文章时，Hexo会根据scaffold来建立文件</span><br><span class="line">├── scripts // 存放自定义 javascript 脚本</span><br><span class="line">├── <span class="built_in">source</span> // 存放用户资源的地方</span><br><span class="line">|   ├── _drafts // 草稿文章</span><br><span class="line">|   └── _posts // 发布文章</span><br><span class="line">├── themes // 存放博客的主题，Hexo会根据主题来生成静态页面</span><br><span class="line">├── _config.yml // 博客的配置信息，你可以在此配置大部分的参数</span><br><span class="line">└── package.json</span><br></pre></td></tr></table></figure></p>
 <p>生成静态页面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></p>
 <p>启动本地服务，打开浏览器输入 <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> 即可访问<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></p>
-<h2 id="将博客托管到Github"><a href="#将博客托管到Github" class="headerlink" title="将博客托管到Github"></a>将博客托管到Github</h2><h4 id="配置-SSH-Key"><a href="#配置-SSH-Key" class="headerlink" title="配置 SSH Key"></a>配置 SSH Key</h4><p>配置SSH Key是让本地 git 项目与远程仓库建立联系。SSH Keys不配置的话每次项目有改动提交的时候就要手动输入账号密码，配置了就不需要了。   </p>
+<h2 id="将博客托管到Github"><a href="#将博客托管到Github" class="headerlink" title="将博客托管到Github"></a>将博客托管到Github</h2><h3 id="配置-SSH-Key"><a href="#配置-SSH-Key" class="headerlink" title="配置 SSH Key"></a>配置 SSH Key</h3><p>配置SSH Key是让本地 git 项目与远程仓库建立联系。SSH Keys不配置的话每次项目有改动提交的时候就要手动输入账号密码，配置了就不需要了。   </p>
 <p>首先检查是否已经有SSH Key<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br></pre></td></tr></table></figure></p>
 <p>如果没有目录.ssh，则要生成一个新的SSH Key，执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"your e-mail"</span></span><br></pre></td></tr></table></figure></p>
 <p>接下来几步都直接按回车键，然后系统会要你输入密码。这个密码会在你提交项目时使用，如果为空的话提交项目时则不用输入。  </p>
 <p>成功后进入到.shh文件夹中再输入ls，查看是否有id_rsa.pub文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">ls</span><br></pre></td></tr></table></figure></p>
 <p>打开id_rsa.pub文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat id_rsa.pub</span><br></pre></td></tr></table></figure></p>
-<p>复制SSH Key后，去 github 的 <a href="https://github.com/settings/keys" target="_blank" rel="noopener">https://github.com/settings/keys</a> 页面配置。  </p>
-<h4 id="测试-SSH-Key-是否配置成功"><a href="#测试-SSH-Key-是否配置成功" class="headerlink" title="测试 SSH Key 是否配置成功"></a>测试 SSH Key 是否配置成功</h4><p>执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure></p>
+<p>复制SSH Key后，去 github 的 <a href="https://github.com/settings/keys" target="_blank" rel="noopener">https://github.com/settings/keys</a> 页面配置，将其添加到Add SSH Key里。  </p>
+<h3 id="测试-SSH-Key-是否配置成功"><a href="#测试-SSH-Key-是否配置成功" class="headerlink" title="测试 SSH Key 是否配置成功"></a>测试 SSH Key 是否配置成功</h3><p>执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure></p>
 <p>如配置了密码则要输入密码，输完按回车。如果显示以下内容，则说明Github中的 ssh 配置成功。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hi username! You have successfully authenticated, but GitHub does not</span><br><span class="line">provide shell access.</span><br></pre></td></tr></table></figure></p>
-<h4 id="创建仓库-Github-Pages"><a href="#创建仓库-Github-Pages" class="headerlink" title="创建仓库 Github Pages"></a>创建仓库 Github Pages</h4><blockquote bgcolor="#FF4500">GitHub Pages 分两种，一种是你的 GitHub 用户名建立的 username.github.io 这样的用户/组织页，另一种是依附项目的pages。想建立个人博客是用的第一种，每个用户名下面只能建立一个。</blockquote>
+<h3 id="创建仓库-Github-Pages"><a href="#创建仓库-Github-Pages" class="headerlink" title="创建仓库 Github Pages"></a>创建仓库 Github Pages</h3><blockquote bgcolor="#FF4500">GitHub Pages 分两种，一种是你的 GitHub 用户名建立的 username.github.io 这样的用户/组织页，另一种是依附项目的pages。想建立个人博客是用的第一种，每个用户名下面只能建立一个。</blockquote>
 
 <p>登陆Github官网成功后，新建 New repository，建立与你github用户名对应的仓库，仓库名必须为 your_user_name.github.io  </p>
-<h4 id="将博客项目上传到仓库"><a href="#将博客项目上传到仓库" class="headerlink" title="将博客项目上传到仓库"></a>将博客项目上传到仓库</h4><p>现在我们需要修改_config.yml文件，来建立关联，执行命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure></p>
+<h3 id="将博客项目上传到仓库"><a href="#将博客项目上传到仓库" class="headerlink" title="将博客项目上传到仓库"></a>将博客项目上传到仓库</h3><p>现在我们需要修改_config.yml文件，来建立关联，执行命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure></p>
 <p>找到相应部分并修改：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: git@github.com:yourname/yourname.github.io.git,master</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>其中 yourname 替换成你的 Github 账户名;</li>
@@ -595,166 +1442,17 @@
 <p>然后执行命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo g <span class="comment">#生成静态网页</span></span><br><span class="line"></span><br><span class="line">hexo d <span class="comment">#部署到远程仓库</span></span><br></pre></td></tr></table></figure></p>
 <p>此时，通过访问 <a href="http://yourname.github.io" target="_blank" rel="noopener">http://yourname.github.io</a> 可以看到默认的 Hexo 首页</p>
 <p>每次部署的命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line"></span><br><span class="line">hexo generate</span><br><span class="line"></span><br><span class="line">hexo deploy</span><br><span class="line"></span><br><span class="line">或者 hexo g -d</span><br></pre></td></tr></table></figure></p>
-<p>一些常用命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">"postName"</span> <span class="comment">#新建文章</span></span><br><span class="line"></span><br><span class="line">hexo new page <span class="string">"pageName"</span> <span class="comment">#新建页面</span></span><br><span class="line"></span><br><span class="line">hexo generate <span class="comment">#生成静态页面至public目录</span></span><br><span class="line"></span><br><span class="line">hexo server <span class="comment">#开启预览访问端口（默认端口4000，'ctrl + c'关闭server）</span></span><br><span class="line"></span><br><span class="line">hexo deploy <span class="comment">#将.deploy目录部署到GitHub</span></span><br><span class="line"></span><br><span class="line">hexo <span class="built_in">help</span> <span class="comment">#查看帮助</span></span><br><span class="line"></span><br><span class="line">hexo version <span class="comment">#查看Hexo的版本</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="添加标签和分类"><a href="#添加标签和分类" class="headerlink" title="添加标签和分类"></a>添加标签和分类</h2><h4 id="添加分类"><a href="#添加分类" class="headerlink" title="添加分类"></a>添加分类</h4><p>新建一个页面，命名为 categories<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure></p>
-<p>修改 source/categories 目录的 index.md :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2018-12-06 22:54:28</span><br><span class="line"><span class="built_in">type</span>: <span class="string">"categories"</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
+<p>一些常用命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">"postName"</span> <span class="comment">#新建文章</span></span><br><span class="line"></span><br><span class="line">hexo new page <span class="string">"pageName"</span> <span class="comment">#新建页面</span></span><br><span class="line"></span><br><span class="line">hexo generate <span class="comment">#生成静态页面至public目录</span></span><br><span class="line"></span><br><span class="line">hexo server <span class="comment">#开启预览访问端口（默认端口4000，'ctrl + c'关闭server）</span></span><br><span class="line"></span><br><span class="line">hexo deploy <span class="comment">#将.deploy目录部署到GitHub</span></span><br><span class="line"></span><br><span class="line">hexo <span class="built_in">help</span> <span class="comment">#查看帮助</span></span><br><span class="line"></span><br><span class="line">hexo version <span class="comment">#查看Hexo的版本</span></span><br><span class="line"></span><br><span class="line">hexo n == hexo new</span><br><span class="line"></span><br><span class="line">hexo g == hexo generate</span><br><span class="line"></span><br><span class="line">hexo s == hexo server</span><br><span class="line"></span><br><span class="line">hexo d == hexo deploy</span><br></pre></td></tr></table></figure></p>
+<h2 id="添加标签和分类"><a href="#添加标签和分类" class="headerlink" title="添加标签和分类"></a>添加标签和分类</h2><h3 id="添加分类"><a href="#添加分类" class="headerlink" title="添加分类"></a>添加分类</h3><p>新建一个页面，命名为 categories<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure></p>
+<p>在 source 目录下会生成 categories 目录，修改 source/categories 目录的 index.md :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2018-12-06 22:54:28</span><br><span class="line"><span class="built_in">type</span>: <span class="string">"categories"</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
 <p>在主题的_config.yml 中取消注释:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">categories: /categories</span><br></pre></td></tr></table></figure></p>
 <p>给模板添加分类属性，打开scarffolds文件夹里的post.md文件，给它的头部加上categories:，这样我们创建的所有新的文章都会自带这个属性，我们只需要往里填分类，就可以自动在网站上形成分类了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">categories:</span><br><span class="line">tags:</span><br></pre></td></tr></table></figure></p>
 <p>给文章添加分类，在要分类的文章顶部加入 category 属性，值为某个分类名:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 文章标题</span><br><span class="line">categories: 分类名</span><br><span class="line">date: 2018-12-09 17:46:34</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
-<h4 id="添加标签"><a href="#添加标签" class="headerlink" title="添加标签"></a>添加标签</h4><p>新建一个页面，命名为 tags<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure></p>
-<p>修改 source/tags 目录的 index.md :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: tags</span><br><span class="line">date: 2018-12-06 22:54:28</span><br><span class="line"><span class="built_in">type</span>: <span class="string">"tags"</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加标签"><a href="#添加标签" class="headerlink" title="添加标签"></a>添加标签</h3><p>新建一个页面，命名为 tags<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure></p>
+<p>在 source 目录下会生成 tags 目录，修改 source/tags 目录的 index.md :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: tags</span><br><span class="line">date: 2018-12-06 22:54:28</span><br><span class="line"><span class="built_in">type</span>: <span class="string">"tags"</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
 <p>在主题的_config.yml 中取消注释:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tags: /tags</span><br></pre></td></tr></table></figure></p>
 <p>以后写文章时，在要分类的文章顶部加入 tags 属性，值为标签名:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 文章标题</span><br><span class="line">categories: 分类名</span><br><span class="line">tags: [a, b]      <span class="comment"># 添加a和b两个标签</span></span><br><span class="line">date: 2018-12-09 17:46:34</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
 <p>上面是数组的形式，下面是短横线的形式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 文章标题</span><br><span class="line">categories: 分类名</span><br><span class="line">date: 2018-12-09 17:46:34</span><br><span class="line">tags:</span><br><span class="line">- node.js</span><br><span class="line">- express</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/4a17b156.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/paimon.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="栾铸显的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/post/4a17b156.html" itemprop="url">Hello World</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-02T19:47:07+08:00">
-                2018-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/post/4a17b156.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count fb-comments-count" data-href="http://yoursite.com/post/4a17b156.html" itemprop="commentCount">0</span> comments
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/post/4a17b156.html" class="leancloud_visitors" data-flag-title="Hello World">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 
           
         
@@ -838,7 +1536,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -849,7 +1547,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -860,7 +1558,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1071,7 +1769,7 @@
         notify: true,
         appId: 'xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz',
         appKey: 'qODRtEtDSVo4Mxj6DkhVAqd9',
-        placeholder: '呵呵后',
+        placeholder: '',
         avatar:'mm',
         guest_info:guest,
         pageSize:'10' || 10,
@@ -1198,6 +1896,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

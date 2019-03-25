@@ -94,7 +94,7 @@
 <meta property="og:site_name" content="栾铸显的博客">
 <meta property="og:description" content="主题我用的是 next 主题 安装主题进入 hexo 站点文件夹1$ cd your-hexo-site 拉取 Next 代码并存放到 themes/next 目录下1$ git clone https://github.com/iissnan/hexo-theme-next themes/next  修改站点_config.yml 文件主题1theme: next 配置主题接下来我们就可以来按需">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-06T13:03:33.797Z">
+<meta property="og:updated_time" content="2019-03-07T09:38:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Next 主题">
 <meta name="twitter:description" content="主题我用的是 next 主题 安装主题进入 hexo 站点文件夹1$ cd your-hexo-site 拉取 Next 代码并存放到 themes/next 目录下1$ git clone https://github.com/iissnan/hexo-theme-next themes/next  修改站点_config.yml 文件主题1theme: next 配置主题接下来我们就可以来按需">
@@ -385,19 +385,86 @@
 <p>拉取 Next 代码并存放到 themes/next 目录下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure></p>
 <p> 修改站点_config.yml 文件主题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure></p>
 <h2 id="配置主题"><a href="#配置主题" class="headerlink" title="配置主题"></a>配置主题</h2><p>接下来我们就可以来按需配置主题内容了，所有内容都在themes/next文件夹下的config.yml文件里修改。  </p>
-<h4 id="菜单栏"><a href="#菜单栏" class="headerlink" title="菜单栏"></a>菜单栏</h4><p>原生菜单栏有主页、关于、分类、标签等数个选项，但是在配置文件中是注释掉的状态，这里我们自行修改注释就行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line"> home: / || home</span><br><span class="line"> # about: /about/ || user</span><br><span class="line"> tags: /tags/ || tags</span><br><span class="line"> categories: /categories/ || th</span><br><span class="line"> archives: /archives/ || archive</span><br><span class="line"> # schedule: /schedule/ || calendar</span><br><span class="line"> # sitemap: /sitemap.xml || sitemap</span><br><span class="line"> # commonweal: /404/ || heartbeat</span><br></pre></td></tr></table></figure></p>
+<h3 id="菜单栏"><a href="#菜单栏" class="headerlink" title="菜单栏"></a>菜单栏</h3><p>原生菜单栏有主页、关于、分类、标签等数个选项，但是在配置文件中是注释掉的状态，这里我们自行修改注释就行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line"> home: / || home</span><br><span class="line"> # about: /about/ || user</span><br><span class="line"> tags: /tags/ || tags</span><br><span class="line"> categories: /categories/ || th</span><br><span class="line"> archives: /archives/ || archive</span><br><span class="line"> # schedule: /schedule/ || calendar</span><br><span class="line"> # sitemap: /sitemap.xml || sitemap</span><br><span class="line"> # commonweal: /404/ || heartbeat</span><br></pre></td></tr></table></figure></p>
 <p>注意点：</p>
 <ul>
 <li>如果事先没有通过hexo new page <pagename>来创建页面的话，即使在配置文件中取消注释，页面也没法显示</pagename></li>
 <li>|| 后面是fontAwesome里的文件对应的名称</li>
 <li>menu_icons记得选enable: true（默认应该是true）</li>
 </ul>
-<h4 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h4><p>修改主题_config.yml 文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avatar: http://....  # 头像的URL或路径</span><br></pre></td></tr></table></figure></p>
-<h4 id="主题风格"><a href="#主题风格" class="headerlink" title="主题风格"></a>主题风格</h4><p>主题提供了4个，我们把想要选择的取消注释，其他三个保持注释掉的状态即可。</p>
-<h4 id="底部建站时间和图标修改"><a href="#底部建站时间和图标修改" class="headerlink" title="底部建站时间和图标修改"></a>底部建站时间和图标修改</h4><h4 id="个人社交信息"><a href="#个人社交信息" class="headerlink" title="个人社交信息"></a>个人社交信息</h4><p>在 social 里我们可以自定义自己想要在个人信息部分展现的账号，同时给他们加上图标。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">social:</span><br><span class="line">  GitHub: https://github.com/XuQuan-nikkkki || github</span><br><span class="line">  E-Mail: mailto:xuquan1225@hotmail.com || envelope</span><br><span class="line">  #Google: https://plus.google.com/yourname || google</span><br><span class="line">  #Twitter: https://twitter.com/yourname || twitter</span><br><span class="line">  #FB Page: https://www.facebook.com/yourname || facebook</span><br></pre></td></tr></table></figure></p>
-<h4 id="网站动画效果"><a href="#网站动画效果" class="headerlink" title="网站动画效果"></a>网站动画效果</h4><p>开关网站的动画。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motion:</span><br><span class="line">  enable: false</span><br></pre></td></tr></table></figure></p>
+<h3 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h3><p>修改主题_config.yml 文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avatar: http://....  # 头像的URL或路径</span><br></pre></td></tr></table></figure></p>
+<h3 id="主题风格"><a href="#主题风格" class="headerlink" title="主题风格"></a>主题风格</h3><p>主题提供了4个，我们把想要选择的取消注释，其他三个保持注释掉的状态即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Schemes</span><br><span class="line"># scheme: Muse</span><br><span class="line"># scheme: Mist</span><br><span class="line"># scheme: Pisces</span><br><span class="line">scheme: Gemini</span><br></pre></td></tr></table></figure></p>
+<h3 id="底部建站时间和图标修改"><a href="#底部建站时间和图标修改" class="headerlink" title="底部建站时间和图标修改"></a>底部建站时间和图标修改</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">footer:</span><br><span class="line">  # Specify the date when the site was setup.</span><br><span class="line">  # If not defined, current year will be used.</span><br><span class="line">  since: 2018</span><br><span class="line"></span><br><span class="line">  # Icon between year and copyright info.</span><br><span class="line">  icon: envira</span><br><span class="line"></span><br><span class="line">  # If not defined, will be used `author` from Hexo main config.</span><br><span class="line">  copyright:</span><br><span class="line">  # -------------------------------------------------------------</span><br><span class="line">  # Hexo link (Powered by Hexo).</span><br><span class="line">  powered: false</span><br><span class="line"></span><br><span class="line">  theme:</span><br><span class="line">    # Theme &amp; scheme info link (Theme - NexT.scheme).</span><br><span class="line">    enable: false</span><br><span class="line">    # Version info of NexT after scheme info (vX.X.X).</span><br><span class="line">    version: false</span><br><span class="line">  #</span><br></pre></td></tr></table></figure>
+<p>我在这部分做了这样几件事，使底部信息更简单：</p>
+<ul>
+<li>把用户的图标从 user 改成了 envira</li>
+<li>copyright 留空</li>
+<li>powered 设为 false 把 hexo 的授权图片取消了</li>
+<li>theme 的 enable 设为 false 把主题的内容也取消了</li>
+</ul>
+<h3 id="统计文章字数和阅读时间"><a href="#统计文章字数和阅读时间" class="headerlink" title="统计文章字数和阅读时间"></a>统计文章字数和阅读时间</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">post_wordcount:</span><br><span class="line">  item_text: true</span><br><span class="line">  wordcount: false  # 文章字数</span><br><span class="line">  min2read: false   # 阅读时间</span><br><span class="line">  totalcount: false # 总共字数</span><br><span class="line">  separated_meta: true</span><br></pre></td></tr></table></figure>
+<p>我在这里关闭了字数统计，使底部信息更简单  </p>
+<h3 id="个人社交信息"><a href="#个人社交信息" class="headerlink" title="个人社交信息"></a>个人社交信息</h3><p>在 social 里我们可以自定义自己想要在个人信息部分展现的账号，同时给他们加上图标。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">social:</span><br><span class="line">  GitHub: https://github.com/yourname || github</span><br><span class="line">  E-Mail: mailto:xxx@hotmail.com || envelope</span><br><span class="line">  #Google: https://plus.google.com/yourname || google</span><br><span class="line">  #Twitter: https://twitter.com/yourname || twitter</span><br><span class="line">  #FB Page: https://www.facebook.com/yourname || facebook</span><br></pre></td></tr></table></figure></p>
+<h3 id="网站动画效果"><a href="#网站动画效果" class="headerlink" title="网站动画效果"></a>网站动画效果</h3><p>开关网站的动画。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motion:</span><br><span class="line">  enable: false</span><br></pre></td></tr></table></figure></p>
 <p>主题自带四种动画效果，可以选自己喜欢的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">motion:</span><br><span class="line">  enable: true</span><br><span class="line">  async: true</span><br><span class="line"></span><br><span class="line"># Canvas-nest</span><br><span class="line">canvas_nest: true</span><br><span class="line"></span><br><span class="line"># three_waves</span><br><span class="line">three_waves: false</span><br><span class="line"></span><br><span class="line"># canvas_lines</span><br><span class="line">canvas_lines: false</span><br><span class="line"></span><br><span class="line"># canvas_sphere</span><br><span class="line">canvas_sphere: false</span><br></pre></td></tr></table></figure></p>
-<h4 id="添加评论"><a href="#添加评论" class="headerlink" title="添加评论"></a>添加评论</h4><h4 id="统计文章字数和阅读时间"><a href="#统计文章字数和阅读时间" class="headerlink" title="统计文章字数和阅读时间"></a>统计文章字数和阅读时间</h4><h4 id="统计阅读次数"><a href="#统计阅读次数" class="headerlink" title="统计阅读次数"></a>统计阅读次数</h4>
+<h3 id="添加评论"><a href="#添加评论" class="headerlink" title="添加评论"></a>添加评论</h3><h3 id="统计阅读次数"><a href="#统计阅读次数" class="headerlink" title="统计阅读次数"></a>统计阅读次数</h3><p><a href="">Next主题添加文章阅读量统计功能</a></p>
+<h3 id="SEO-优化"><a href="#SEO-优化" class="headerlink" title="SEO 优化"></a>SEO 优化</h3><p>next 提供了 seo 优化选项，在主题配置文件 <code>_config.yml</code> 中有个选项是 seo，设置成 true 即开启了 seo 优化，会进行一些 seo 优化。<br>百度无法搜索到博客信息，是因为 Github Pages 屏蔽了百度爬虫，所以我将博客同步到两个平台上，一个 <a href="https://github.com/" target="_blank" rel="noopener">Github</a>，一个国内的 <a href="https://coding.net/" target="_blank" rel="noopener">Coding</a>。</p>
+<h3 id="添加-robots-txt"><a href="#添加-robots-txt" class="headerlink" title="添加 robots.txt"></a>添加 robots.txt</h3><p>robots.txt 是搜索引擎蜘蛛协议，告诉引擎哪些要收录，哪些禁止收录。<br>source 文件下新建 robots.txt，内容如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Allow: /</span><br><span class="line">Allow: /categories/</span><br><span class="line">Allow: /tags/</span><br><span class="line">Allow: /archives/</span><br><span class="line">Disallow: /js/</span><br><span class="line">Disallow: /css/</span><br><span class="line">Disallow: /fonts/</span><br><span class="line">Disallow: /vendors/</span><br><span class="line">Disallow: /fancybox/</span><br><span class="line"></span><br><span class="line">Sitemap: https://luanzhuxian.github.io/sitemap.xml</span><br><span class="line">Sitemap: https://luanzhuxian.github.io/baidusitemap.xml</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加自定义js-css文件"><a href="#添加自定义js-css文件" class="headerlink" title="添加自定义js/css文件"></a>添加自定义js/css文件</h3><ul>
+<li>首先把<code>js</code>文件放在<code>\themes\next\source\js\src</code>文件目录下</li>
+<li>首先把<code>css</code>文件放在<code>\themes\next\source\css\src</code>文件目录下</li>
+<li>找到<code>\themes\next\layout</code>目录下的布局文件<code>_layout.swig</code></li>
+<li>把引用代码加入到该文件中即可<code>&lt;script type=&quot;text/javascript&quot; src=&quot;/js/src/xxx.js&quot;&gt;&lt;/script&gt;</code></li>
+<li>也可以在<code>\themes\next\source\css\_custom\custom.styl</code>文件中进行样式的添加</li>
+</ul>
+<h2 id="第三方插件"><a href="#第三方插件" class="headerlink" title="第三方插件"></a>第三方插件</h2><h3 id="博客压缩-hexo-all-minifier"><a href="#博客压缩-hexo-all-minifier" class="headerlink" title="博客压缩 ??? hexo-all-minifier"></a>博客压缩 ??? hexo-all-minifier</h3><h3 id="上传图片到七牛云"><a href="#上传图片到七牛云" class="headerlink" title="上传图片到七牛云 ???"></a>上传图片到七牛云 ???</h3><p>在markdown中写blog的朋友，想必这点是最烦恼的吧，一般来说都要手动上传图片到七牛云，再把链接写到markdown中。</p>
+<ul>
+<li>有人用phthon实现一个自动上传的脚本，</li>
+<li>在github上找到一个一键贴图工具<a href="https://github.com/jiwenxing/qimage-mac" target="_blank" rel="noopener">qiniu-image-tool</a>，它支持本地文件、截图、网络图片一键上传七牛云并返回图片引用。Mac 是基于 Alfred 的，其 windows 也有相应版本windows版本。</li>
+</ul>
+<h3 id="将博客同时部署到-github-和-coding"><a href="#将博客同时部署到-github-和-coding" class="headerlink" title="将博客同时部署到 github 和 coding ???"></a>将博客同时部署到 github 和 coding ???</h3><p>按照其要求配置好以后，用截图软件截图后，或者本地图片后 copy，然后直接按设置好的 command+option+v，然后在图片成功上传到七牛云图床上，剪贴板上也有相应的连接。</p>
+<h3 id="hexo-abbrlink-链接持久化"><a href="#hexo-abbrlink-链接持久化" class="headerlink" title="hexo-abbrlink 链接持久化"></a>hexo-abbrlink 链接持久化</h3><p>大家知道<code>hexo</code>默认的链接是 <code>http://xxx.yy.com/2018/07/14/hello-world</code> 这种类型的，这源于站点目录下的配置 <code>_config.yml</code> 里的配置 <code>:permalink: :year/:month/:day/:title/</code>，这种默认配置的缺点就是一般文件名是中文，导致<code>url</code>链接里有中文出现，这会造成很多问题，如使用<code>gitment</code>，也不利于<code>SEO</code>，另外年月日都会有分隔符。<br><code>hexo-abbrlink</code>这个插件，猜测是根据时间点算出的最终链接，这样就确保了博文链接的唯一化，只要不修改<code>md</code>文件的<code>abbrlink</code>的值，<code>url</code>就永久不会改变。如此<code>md</code>文件名和文件内容也可以随便改了。后面的层级更短，这样也有利于<code>SEO</code>优化。</p>
+<ul>
+<li><p>安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-abbrlink --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：<br>站点配置文件里:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">permalink: post/:abbrlink.html</span><br><span class="line">abbrlink:</span><br><span class="line"> alg: crc32  # 算法：crc16(default) and crc32</span><br><span class="line"> rep: hex    # 进制：dec(default) and hex</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>另外可以修改<code>scaffolds</code>里的模版文件，修改<code>post.md</code>为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">comments: true</span><br><span class="line">categories:</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
+<p><blockquote bgcolor="#FF4500"><br>百度蜘蛛抓取网页的规则: 对于蜘蛛说网页权重越高、信用度越高抓取越频繁，例如网站的首页和内页。蜘蛛先抓取网站的首页，因为首页权重更高，并且大部分的链接都是指向首页。然后通过首页抓取网站的内页，并不是所有内页蜘蛛都会去抓取。<br></blockquote><br>搜索引擎认为对于一般的中小型站点，3层足够承受所有的内容了，所以蜘蛛经常抓取的内容是前三层，而超过三层的内容蜘蛛认为那些内容并不重要，所以不经常爬取。出于这个原因所以permalink后面跟着的最好不要超过2个斜杠。</p>
+<h3 id="hexo-autonofollow"><a href="#hexo-autonofollow" class="headerlink" title="hexo-autonofollow"></a>hexo-autonofollow</h3><p>nofollow 标签是由谷歌领头创新的一个反垃圾链接的标签，并被百度、yahoo 等各大搜索引擎广泛支持，引用 nofollow 标签的目的是：用于指示搜索引擎不要追踪（即抓取）网页上的带有 nofollow 属性的任何出站链接，以减少垃圾链接的分散网站权重。<br>这里推荐 <code>hexo-autonofollow</code> 插件来解决。  </p>
+<ul>
+<li><p>安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-autonofollow  --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：<br>在站点配置文件中添加以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nofollow:</span><br><span class="line">  enable: true</span><br><span class="line">  exclude: # 例外的链接，可将友情链接放置此处</span><br><span class="line">  - exclude1.com</span><br><span class="line">  - exclude2.com</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="hexo-douban"><a href="#hexo-douban" class="headerlink" title="hexo-douban"></a>hexo-douban</h3><p><a href="https://github.com/mythsman/hexo-douban" target="_blank" rel="noopener"><code>hexo-douban</code></a> 插件可以在博客中添加豆瓣电影、读书和游戏页面，关联我们自己的账号。  </p>
+<ul>
+<li><p>安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-douban --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：<br>在 hexo 根目录下的 config.yml 文件中添加如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">douban:</span><br><span class="line">  user: 你的豆瓣userid</span><br><span class="line">  builtin: false</span><br><span class="line">  book:</span><br><span class="line">    title: &apos;This is my book title&apos;</span><br><span class="line">    quote: &apos;This is my book quote&apos;</span><br><span class="line">  movie:</span><br><span class="line">    title: &apos;This is my movie title&apos;</span><br><span class="line">    quote: &apos;This is my movie quote&apos;</span><br><span class="line">  game:</span><br><span class="line">    title: &apos;This is my game title&apos;</span><br><span class="line">    quote: &apos;This is my game quote&apos;</span><br><span class="line">  timeout: 10000</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>title 和 quote 后面的内容会分别作为电影/读书/游戏页面的标题和副标题（引言）呈现在博客里。<br>user 就写我们豆瓣的 id，可以在我的豆瓣页面中找到。builtin 指是否将生成页面功能嵌入 hexo s 和 hexo g 中，建议选 false，因为true会导致页面每次启动本地服务器都需要很长时间生成豆瓣页面。  </p>
+<ul>
+<li><p>生成页面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo douban   #生成读书、电影、游戏三个页面</span><br><span class="line">hexo douban -b  #生成读书页面</span><br><span class="line">hexo douban -m  #生成电影页面</span><br><span class="line">hexo douban -g  #生成游戏页面</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在博客中生成页面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo new page books</span><br><span class="line">hexo new page movies</span><br><span class="line">hexo new page games</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在博客中添加页面：<br>在menu部分添加我们需要添加的页面名称和相对路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: /</span><br><span class="line">  categories: /categories/</span><br><span class="line">  archives: /archives/</span><br><span class="line">  Books: /books/     #This is your books page</span><br><span class="line">  Movies: /movies/   #This is your movies page</span><br><span class="line">  Games: /games/     #This is your games page</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
       
     </div>
     
@@ -427,8 +494,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/73f1724d.html" rel="next" title="Hexo + Next搭建博客">
-                <i class="fa fa-chevron-left"></i> Hexo + Next搭建博客
+              <a href="/post/73f1724d.html" rel="next" title="Next主题添加文章阅读量统计功能">
+                <i class="fa fa-chevron-left"></i> Next主题添加文章阅读量统计功能
               </a>
             
           </div>
@@ -436,6 +503,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/post/73f1724d.html" rel="prev" title="Hexo添加文章时自动打开编辑器">
+                Hexo添加文章时自动打开编辑器 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -517,7 +588,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -528,7 +599,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -539,7 +610,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -572,7 +643,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#主题"><span class="nav-number">1.</span> <span class="nav-text">主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装主题"><span class="nav-number">2.</span> <span class="nav-text">安装主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置主题"><span class="nav-number">3.</span> <span class="nav-text">配置主题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#菜单栏"><span class="nav-number">3.0.1.</span> <span class="nav-text">菜单栏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置头像"><span class="nav-number">3.0.2.</span> <span class="nav-text">设置头像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主题风格"><span class="nav-number">3.0.3.</span> <span class="nav-text">主题风格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#底部建站时间和图标修改"><span class="nav-number">3.0.4.</span> <span class="nav-text">底部建站时间和图标修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#个人社交信息"><span class="nav-number">3.0.5.</span> <span class="nav-text">个人社交信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网站动画效果"><span class="nav-number">3.0.6.</span> <span class="nav-text">网站动画效果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加评论"><span class="nav-number">3.0.7.</span> <span class="nav-text">添加评论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#统计文章字数和阅读时间"><span class="nav-number">3.0.8.</span> <span class="nav-text">统计文章字数和阅读时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#统计阅读次数"><span class="nav-number">3.0.9.</span> <span class="nav-text">统计阅读次数</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#主题"><span class="nav-number">1.</span> <span class="nav-text">主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装主题"><span class="nav-number">2.</span> <span class="nav-text">安装主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置主题"><span class="nav-number">3.</span> <span class="nav-text">配置主题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单栏"><span class="nav-number">3.1.</span> <span class="nav-text">菜单栏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置头像"><span class="nav-number">3.2.</span> <span class="nav-text">设置头像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主题风格"><span class="nav-number">3.3.</span> <span class="nav-text">主题风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#底部建站时间和图标修改"><span class="nav-number">3.4.</span> <span class="nav-text">底部建站时间和图标修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统计文章字数和阅读时间"><span class="nav-number">3.5.</span> <span class="nav-text">统计文章字数和阅读时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人社交信息"><span class="nav-number">3.6.</span> <span class="nav-text">个人社交信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站动画效果"><span class="nav-number">3.7.</span> <span class="nav-text">网站动画效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加评论"><span class="nav-number">3.8.</span> <span class="nav-text">添加评论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统计阅读次数"><span class="nav-number">3.9.</span> <span class="nav-text">统计阅读次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEO-优化"><span class="nav-number">3.10.</span> <span class="nav-text">SEO 优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加-robots-txt"><span class="nav-number">3.11.</span> <span class="nav-text">添加 robots.txt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加自定义js-css文件"><span class="nav-number">3.12.</span> <span class="nav-text">添加自定义js/css文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三方插件"><span class="nav-number">4.</span> <span class="nav-text">第三方插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#博客压缩-hexo-all-minifier"><span class="nav-number">4.1.</span> <span class="nav-text">博客压缩 ??? hexo-all-minifier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上传图片到七牛云"><span class="nav-number">4.2.</span> <span class="nav-text">上传图片到七牛云 ???</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将博客同时部署到-github-和-coding"><span class="nav-number">4.3.</span> <span class="nav-text">将博客同时部署到 github 和 coding ???</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo-abbrlink-链接持久化"><span class="nav-number">4.4.</span> <span class="nav-text">hexo-abbrlink 链接持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo-autonofollow"><span class="nav-number">4.5.</span> <span class="nav-text">hexo-autonofollow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo-douban"><span class="nav-number">4.6.</span> <span class="nav-text">hexo-douban</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -770,7 +841,7 @@
         notify: true,
         appId: 'xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz',
         appKey: 'qODRtEtDSVo4Mxj6DkhVAqd9',
-        placeholder: '呵呵后',
+        placeholder: '',
         avatar:'mm',
         guest_info:guest,
         pageSize:'10' || 10,
@@ -897,6 +968,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   
