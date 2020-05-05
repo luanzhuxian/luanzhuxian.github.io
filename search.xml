@@ -26,7 +26,7 @@
 <p>配合<code>await</code>：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(async () =&gt; &#123;</span><br><span class="line">  try &#123;</span><br><span class="line">    const a = Promise.resolve(1)</span><br><span class="line">    const b = Promise.reject(2)</span><br><span class="line">    const c = Promise.resolve(3)</span><br><span class="line"></span><br><span class="line">    let [ra, rb, rc] = await Promise.all([a, b, c].map(p =&gt; p.catch(e =&gt; 100)))</span><br><span class="line">    console.log(ra, rb, rc)  // 1 100 3</span><br><span class="line">  &#125; catch (err) &#123;</span><br><span class="line">    throw err</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure></p>
 <p>通过 ES2020 的<code>Promise.allSettled()</code>实现。和<code>Promise.all</code>类似，但即使有 promise 失败变为<code>rejected</code>，也不会影响其他 promise 的状态。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const a = Promise.resolve(1)</span><br><span class="line">const b = Promise.reject(2)</span><br><span class="line"></span><br><span class="line">Promise.allSettled([a, b]).then(res =&gt; &#123;</span><br><span class="line">  console.log(res)</span><br><span class="line">&#125;)</span><br><span class="line">// [&#123; status: &apos;fulfilled&apos;, value: 1 &#125;, &#123; status: &apos;rejected&apos;, reason: 2 &#125;]</span><br></pre></td></tr></table></figure></p>
 <h1 id="控制-promise-并发"><a href="#控制-promise-并发" class="headerlink" title="控制 promise 并发"></a>控制 promise 并发</h1><p>当<code>Promise.all</code>中任务数量过多时，希望控制每个时刻并发执行的<code>promise</code>任务数量是固定的。当所有<code>promise</code>完成时，触发总的<code>resolve</code>。<br>因为<code>Promise.all</code>中的任务，其实是<code>promise</code>实例化的时候执行的，所以要限制并发，就要限制<code>promise</code>的实例化。就是把生成<code>promise</code>数组的的控制权交给并发控制逻辑。<br>这里参考一个第三方的库 <a href="https://www.npmjs.com/package/tiny-async-pool" target="_blank" rel="noopener">async-pool</a> 的实现。去掉不必要的代码，大概内容如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line">* @param poolLimit 并发控制数 (&gt;= 1)</span><br><span class="line">* @param array</span><br><span class="line">* @param iteratorFn 异步任务，返回 promise 或是 async 方法</span><br><span class="line">*/</span><br><span class="line">function asyncPool (poolLimit, array, iteratorFn) &#123;</span><br><span class="line">    let i = 0</span><br><span class="line">    const ret = []  // Promise.all(ret) 的数组</span><br><span class="line">    const executing = []</span><br><span class="line">    const enqueue = function () &#123;</span><br><span class="line">        // array 遍历完，进入 Promise.all 流程</span><br><span class="line">        if (i === array.length) &#123;</span><br><span class="line">            return Promise.resolve()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 每调用一次 enqueue，就初始化一个 promise，并放入 ret 队列</span><br><span class="line">        const item = array[i++]</span><br><span class="line">        const p = Promise.resolve().then(() =&gt; iteratorFn(item, array))</span><br><span class="line">        ret.push(p)</span><br><span class="line"></span><br><span class="line">        // 插入 executing 队列，即正在执行的 promise 队列，并且 promise 执行完毕后，会从 executing 队列中移除</span><br><span class="line">        const e = p.then(() =&gt; executing.splice(executing.indexOf(e), 1))</span><br><span class="line">        executing.push(e)</span><br><span class="line"></span><br><span class="line">        // 每当 executing 数组中 promise 数量达到 poolLimit 时，就利用 Promise.race 控制并发数，完成的 promise 会从 executing 队列中移除，并触发 Promise.race 也就是 r 的回调，继续递归调用 enqueue，继续 加入新的 promise 任务至 executing 队列</span><br><span class="line">        let r = Promise.resolve()</span><br><span class="line">        if (executing.length &gt;= poolLimit) &#123;</span><br><span class="line">            r = Promise.race(executing)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 递归，链式调用，直到遍历完 array</span><br><span class="line">        return r.then(() =&gt; enqueue())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return enqueue().then(() =&gt; Promise.all(ret))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如何使用：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const timeout = i =&gt; new Promise(resolve =&gt; setTimeout(() =&gt; resolve(i), i))</span><br><span class="line"></span><br><span class="line">return asyncPool(3, [1000, 5000, 2000, 3000], timeout).then(results =&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>如何使用：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const array = [1000, 5000, 2000, 3000]</span><br><span class="line">const timeout = i =&gt; new Promise(resolve =&gt; setTimeout(() =&gt; resolve(i), i))</span><br><span class="line"></span><br><span class="line">return asyncPool(3, array, timeout).then(results =&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 <p>大概过程如下：</p>
 <ul>
 <li>将 1000、5000 和 2000 的<code>promise</code>依次加入<code>ret</code>和<code>executing</code>队列</li>
@@ -1284,6 +1284,111 @@
       </tags>
   </entry>
   <entry>
+    <title>自动备份 Hexo 博客文件</title>
+    <url>/post/a433710c.html</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>每次更新博文都需要输入两三行重复的Git命令比较麻烦，下面介绍一种自动备份 Hexo 博客源文件的方法。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>通过通过监听 Hexo 的事件来完成自动执行Git命令完成自动备份。通过查阅 <a href="https://hexo.io/zh-cn/api/events.html" target="_blank" rel="noopener">Hexo文档</a>，找到了 Hexo 的主要事件，见下表：</p>
+<table>
+<thead>
+<tr>
+<th>事件名</th>
+<th>事件发生时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>deployBefore</td>
+<td>在部署完成前发布</td>
+</tr>
+<tr>
+<td>deployAfter</td>
+<td>在部署成功后发布</td>
+</tr>
+<tr>
+<td>exit</td>
+<td>在 Hexo 结束前发布</td>
+</tr>
+<tr>
+<td>generateBefore</td>
+<td>在静态文件生成前发布</td>
+</tr>
+<tr>
+<td>generateAfter</td>
+<td>在静态文件生成后发布</td>
+</tr>
+<tr>
+<td>new</td>
+<td>在文章文件建立后发布</td>
+</tr>
+</tbody>
+</table>
+<p>于是我们就可以通过监听 Hexo 的<code>deployAfter</code>事件，待上传完成之后自动运行 Git 备份命令，从而达到自动备份的目的。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="删除-Next-主题的-git-缓存文件夹"><a href="#删除-Next-主题的-git-缓存文件夹" class="headerlink" title="删除 Next 主题的 .git 缓存文件夹"></a>删除 Next 主题的 .git 缓存文件夹</h2><p>我们如果要将项目上传到远程仓库，先要<code>git add .</code>添加到暂存区，然后<code>git commit</code>，这时会出现如下报错：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Changes not staged for commit:</span><br><span class="line">        modified:   themes/xxx</span><br></pre></td></tr></table></figure></p>
+<p>并且提交后会发现远程仓库主题文件夹都是空的。因为位于<code>themes</code>文件夹下的主题是从另一个 git 仓库上 clone 过来的，由于你 clone 下来的文件夹也是一个 git 仓库，因此正常的<code>git add .</code>是无法提交该文件夹下的文件的，会和 Hexo 仓库冲突，每次提交只会提交 Hexo 项目的修改，而不会提交 Next 主题的修改。  所以我们要先删除<code>.git缓存文件</code>。  </p>
+<p><strong>解决方案：</strong></p>
+<ul>
+<li><p>1、先强行删除 clone 来的主题目录下的 .git 文件夹：<br>在<code>themes/next</code>目录下打开命令行工具，执行<code>rd/s/q .git</code>命令，删除成功后执行<code>ls .git</code>命令提示如下内容说明删除成功：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ ls .git</span><br><span class="line">ls: cannot access &apos;.git&apos;: No such file or directory</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>2、回到仓库根目录删除已经托管的空主题文件夹：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm -rf --cached &quot;themes/next&quot;</span><br><span class="line">git commit -m &quot;remove empty folder&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>使名为主题目录不再接受版本控制，所以就没有子模块的冲突了。之后上传不会报上面的错。  </p>
+<h2 id="将-Hexo-博客源文件上传-Git-仓库"><a href="#将-Hexo-博客源文件上传-Git-仓库" class="headerlink" title="将 Hexo 博客源文件上传 Git 仓库"></a>将 Hexo 博客源文件上传 Git 仓库</h2><p>上传后也可以随时拉取代码，方便更新管理项目。<br>在 Github 下创建一个新的<code>repository</code>，命名与本地的源码文件夹同名即可。<br>进入本地的源码根目录，执行以下命令创建仓库:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
+<p>设置远程仓库地址，并更新：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add origin git@github.com:用户名/版本库名(xxx/hexo.git)</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure></p>
+<p>修改<code>.gitignore</code>文件（如果没有请手动创建一个）。如果想忽略掉某个文件，不让这个文件提交到版本库中，可以使用修改 .gitignore 文件的方法。 .gitignore 的匹配规则：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">*.a       # 忽略所有 .a 结尾的文件</span><br><span class="line">!lib.a    # 但 lib.a 除外</span><br><span class="line">/TODO     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO</span><br><span class="line">build/    # 忽略 build/ 目录下的所有文件</span><br><span class="line">doc/*.txt # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt</span><br></pre></td></tr></table></figure></p>
+<p><strong>注意：若有不该提交的文件已经提交后，仅仅在 .gitignore 中加入忽略是不行的。这个时候需要执行：<code>git rm -r --cached 文件/文件夹名字</code>。</strong>  </p>
+<p>在 .gitignore 文件里面加入<code>*.log</code>和 <code>public/</code>以及<code>.deploy*/</code>。因为每次执行<code>hexo generate</code>命令时，上述目录都会被重写更新。因此忽略这两个目录下的文件更新，加快 push 速度。</p>
+<p>执行命令以下命令，完成 Hexo 源码在本地的提交，并将本地的仓库文件推送到 Github。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m &quot;xxx&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以从其他计算机拉取项目了。</p>
+<h2 id="安装-shelljs-模块"><a href="#安装-shelljs-模块" class="headerlink" title="安装 shelljs 模块"></a>安装 shelljs 模块</h2><p>要实现这个自动备份功能，需要依赖 NodeJs 的一个 shelljs 模块，该模块重新包装了<code>child_process</code>，调用系统命令更加的方便。<br>在命令中键入以下命令，完成 shelljs 模块的安装：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install --save-dev shelljs</span><br></pre></td></tr></table></figure></p>
+<h2 id="编写自动备份脚本"><a href="#编写自动备份脚本" class="headerlink" title="编写自动备份脚本"></a>编写自动备份脚本</h2><p>模块安装完成，在 Hexo 根目录的<code>scripts</code>文件夹下新建一个 js 文件，文件名随意取。（如果没有<code>scripts</code>目录，请新建一个。）<br>然后在脚本中，写入以下内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">require(&apos;shelljs/global&apos;)</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">  hexo.on(&apos;deployAfter&apos;, function() &#123;//当deploy完成后执行备份</span><br><span class="line">    run()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125; catch (e) &#123;</span><br><span class="line">  console.log(&apos;Error:&apos; + e.toString())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function run() &#123;</span><br><span class="line">  if (!which(&apos;git&apos;)) &#123;</span><br><span class="line">    echo(&apos;Sorry, this script requires git&apos;)</span><br><span class="line">    exit(1)</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    echo(&apos;====================== Auto Backup Begin ======================&apos;)</span><br><span class="line">    cd(&apos;/Users/666/Desktop/code/project/Blog&apos;)    //此处修改为Hexo根目录路径</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git add --all&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git add failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git commit -am &quot;Form auto backup script\&apos;s commit&quot;&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git commit failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git push origin master&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git push failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    echo(&apos;====================== Auto Backup Complete ======================&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>cd(&#39;/Users/666/Desktop/code/project/Blog&#39;)</code>路径为本地 Hexo 的根目录路径。</li>
+<li>如果你的 Git 远程仓库名称不为 origin 的话，还需要修改执行的 push 命令，修改成自己的远程仓库名和相应的分支名。</li>
+</ul>
+<p>保存脚本并退出，然后执行<code>hexo deploy</code>命令，将会得到类似以下结果：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br><span class="line">INFO  Deploying: baidu_url_submitter</span><br><span class="line">INFO  Submitting urls</span><br><span class="line">...省略</span><br><span class="line">INFO  Deploy done: baidu_url_submitter</span><br><span class="line">[master 3db66ca] Form auto backup script&apos;s commit</span><br><span class="line"> 4 files changed, 93 insertions(+), 8 deletions(-)</span><br><span class="line"> create mode 100644 source/_posts/hexo-compress.md</span><br><span class="line">To https://github.com/luanzhuxian/Blog.git</span><br><span class="line">   f7e5190..3db66ca  master -&gt; master</span><br><span class="line">==================Auto Backup Complete============================</span><br></pre></td></tr></table></figure></p>
+<p>这样子，每次更新博文并<code>deploy</code>到服务器上之后，备份就自动启动并完成备份啦~</p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo + Next 添加文章阅读量统计</title>
+    <url>/post/ec069b41.html</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于 <a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a> 这家服务提供商，实现 Hexo 博客文章的浏览数统计功能。  </p>
+<p> Next 主题目前已经合并这个功能，相关代码在<code>themes\next\layout\_third-party\analytics\lean-analytics.swig</code>，可以不用修改主题模版，直接在<code>_config.yml</code>中配置即可。</p>
+<h2 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置LeanCloud</h2><p>在注册完成 LeanCloud 帐号并验证邮箱之后，我们就可以登录帐号。</p>
+<h3 id="1、创建一个开发版应用（免费）："><a href="#1、创建一个开发版应用（免费）：" class="headerlink" title="1、创建一个开发版应用（免费）："></a>1、创建一个开发版应用（免费）：</h3><p>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台点击创建应用：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud.png" alt="avatar"><br>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-application.png" alt="avatar"></p>
+<h3 id="2、设置"><a href="#2、设置" class="headerlink" title="2、设置"></a>2、设置</h3><p>在<code>LeanCloud &gt; 设置 &gt; 安全中心</code>中，<code>服务开关</code>部分只开启<code>数据存储</code>。<br>因为<code>AppID</code>以及<code>AppKey</code>是暴露在外的，为了确保只用于我们自己的博客，建议开启<code>Web安全选项</code>，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。<code>Web安全域名</code>下面要添加你的 Github Page 域名，来确保数据调用的安全：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-setting.png" alt="avatar"></p>
+<h3 id="3、创建Class"><a href="#3、创建Class" class="headerlink" title="3、创建Class"></a>3、创建Class</h3><p>在应用的数据配置界面，左侧数据栏下，下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。<br>点击顶部的加号图标<code>新建Class</code>。在弹出的选项中选择<code>创建Class</code>用来专门保存我们博客的文章访问量等数据:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-class.png" alt="avatar"><br><strong>注意：</strong></p>
+<ul>
+<li><strong>为了保证我们前面对 NexT 主题的修改兼容，此处的<font color="red">Class名称必须为Counter</font>。</strong></li>
+<li><strong>由于 LeanCloud 升级了默认的 ACL 权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择无限制。</strong>  </li>
+</ul>
+<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击最左侧菜单栏的设置。<br>在设置界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>App ID</code>以及<code>App Key</code>，有了它，我们就有权限能够通过主题中配置好的 Javascript 代码与这个应用的<code>Counter表</code>进行数据存取操作了:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-key.png" alt="avatar"></p>
+<h3 id="4、修改next配置"><a href="#4、修改next配置" class="headerlink" title="4、修改next配置"></a>4、修改next配置</h3><p>复制<code>AppID</code>以及<code>AppKey</code>并在 Next 主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz</span><br><span class="line">  app_key: qODRtEtDSVo4Mxj6DkhVAqd9</span><br></pre></td></tr></table></figure></p>
+<p>这个时候重新生成部署 Hexo 博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的发布日期以及文章的标题，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
+<h2 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h2><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们 LeanCloud 对应的应用的<code>Counter 表</code>中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter表</code>中。</p>
+<ul>
+<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
+<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
+<li>其他字段皆为自动生成，具体作用请查阅 LeanCloud 官方文档，如果你不知道有什么作用请不要随意修改。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Next 主题</title>
     <url>/post/df6058cd.html</url>
     <content><![CDATA[<h2 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h2><p>我用的是 <a href="http://theme-next.iissnan.com/" target="_blank" rel="noopener">next</a> 主题。<br><strong>注意：我使用的<code>Hexo</code>版本为<code>3.8.0</code>，<code>Next</code>版本为<code>5.1.4</code>，也就是文章是基于上述版本写的。</strong></p>
@@ -1374,111 +1479,6 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: /</span><br><span class="line">  categories: /categories/</span><br><span class="line">  archives: /archives/</span><br><span class="line">  Books: /books/     # This is your books page</span><br><span class="line">  Movies: /movies/   # This is your movies page</span><br><span class="line">  Games: /games/     # This is your games page</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo + Next 添加文章阅读量统计</title>
-    <url>/post/ec069b41.html</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于 <a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a> 这家服务提供商，实现 Hexo 博客文章的浏览数统计功能。  </p>
-<p> Next 主题目前已经合并这个功能，相关代码在<code>themes\next\layout\_third-party\analytics\lean-analytics.swig</code>，可以不用修改主题模版，直接在<code>_config.yml</code>中配置即可。</p>
-<h2 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置LeanCloud</h2><p>在注册完成 LeanCloud 帐号并验证邮箱之后，我们就可以登录帐号。</p>
-<h3 id="1、创建一个开发版应用（免费）："><a href="#1、创建一个开发版应用（免费）：" class="headerlink" title="1、创建一个开发版应用（免费）："></a>1、创建一个开发版应用（免费）：</h3><p>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台点击创建应用：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud.png" alt="avatar"><br>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-application.png" alt="avatar"></p>
-<h3 id="2、设置"><a href="#2、设置" class="headerlink" title="2、设置"></a>2、设置</h3><p>在<code>LeanCloud &gt; 设置 &gt; 安全中心</code>中，<code>服务开关</code>部分只开启<code>数据存储</code>。<br>因为<code>AppID</code>以及<code>AppKey</code>是暴露在外的，为了确保只用于我们自己的博客，建议开启<code>Web安全选项</code>，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。<code>Web安全域名</code>下面要添加你的 Github Page 域名，来确保数据调用的安全：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-setting.png" alt="avatar"></p>
-<h3 id="3、创建Class"><a href="#3、创建Class" class="headerlink" title="3、创建Class"></a>3、创建Class</h3><p>在应用的数据配置界面，左侧数据栏下，下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。<br>点击顶部的加号图标<code>新建Class</code>。在弹出的选项中选择<code>创建Class</code>用来专门保存我们博客的文章访问量等数据:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-class.png" alt="avatar"><br><strong>注意：</strong></p>
-<ul>
-<li><strong>为了保证我们前面对 NexT 主题的修改兼容，此处的<font color="red">Class名称必须为Counter</font>。</strong></li>
-<li><strong>由于 LeanCloud 升级了默认的 ACL 权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择无限制。</strong>  </li>
-</ul>
-<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击最左侧菜单栏的设置。<br>在设置界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>App ID</code>以及<code>App Key</code>，有了它，我们就有权限能够通过主题中配置好的 Javascript 代码与这个应用的<code>Counter表</code>进行数据存取操作了:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-key.png" alt="avatar"></p>
-<h3 id="4、修改next配置"><a href="#4、修改next配置" class="headerlink" title="4、修改next配置"></a>4、修改next配置</h3><p>复制<code>AppID</code>以及<code>AppKey</code>并在 Next 主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz</span><br><span class="line">  app_key: qODRtEtDSVo4Mxj6DkhVAqd9</span><br></pre></td></tr></table></figure></p>
-<p>这个时候重新生成部署 Hexo 博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的发布日期以及文章的标题，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
-<h2 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h2><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们 LeanCloud 对应的应用的<code>Counter 表</code>中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter表</code>中。</p>
-<ul>
-<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
-<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
-<li>其他字段皆为自动生成，具体作用请查阅 LeanCloud 官方文档，如果你不知道有什么作用请不要随意修改。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>自动备份 Hexo 博客文件</title>
-    <url>/post/a433710c.html</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>每次更新博文都需要输入两三行重复的Git命令比较麻烦，下面介绍一种自动备份 Hexo 博客源文件的方法。</p>
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>通过通过监听 Hexo 的事件来完成自动执行Git命令完成自动备份。通过查阅 <a href="https://hexo.io/zh-cn/api/events.html" target="_blank" rel="noopener">Hexo文档</a>，找到了 Hexo 的主要事件，见下表：</p>
-<table>
-<thead>
-<tr>
-<th>事件名</th>
-<th>事件发生时间</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>deployBefore</td>
-<td>在部署完成前发布</td>
-</tr>
-<tr>
-<td>deployAfter</td>
-<td>在部署成功后发布</td>
-</tr>
-<tr>
-<td>exit</td>
-<td>在 Hexo 结束前发布</td>
-</tr>
-<tr>
-<td>generateBefore</td>
-<td>在静态文件生成前发布</td>
-</tr>
-<tr>
-<td>generateAfter</td>
-<td>在静态文件生成后发布</td>
-</tr>
-<tr>
-<td>new</td>
-<td>在文章文件建立后发布</td>
-</tr>
-</tbody>
-</table>
-<p>于是我们就可以通过监听 Hexo 的<code>deployAfter</code>事件，待上传完成之后自动运行 Git 备份命令，从而达到自动备份的目的。</p>
-<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="删除-Next-主题的-git-缓存文件夹"><a href="#删除-Next-主题的-git-缓存文件夹" class="headerlink" title="删除 Next 主题的 .git 缓存文件夹"></a>删除 Next 主题的 .git 缓存文件夹</h2><p>我们如果要将项目上传到远程仓库，先要<code>git add .</code>添加到暂存区，然后<code>git commit</code>，这时会出现如下报错：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Changes not staged for commit:</span><br><span class="line">        modified:   themes/xxx</span><br></pre></td></tr></table></figure></p>
-<p>并且提交后会发现远程仓库主题文件夹都是空的。因为位于<code>themes</code>文件夹下的主题是从另一个 git 仓库上 clone 过来的，由于你 clone 下来的文件夹也是一个 git 仓库，因此正常的<code>git add .</code>是无法提交该文件夹下的文件的，会和 Hexo 仓库冲突，每次提交只会提交 Hexo 项目的修改，而不会提交 Next 主题的修改。  所以我们要先删除<code>.git缓存文件</code>。  </p>
-<p><strong>解决方案：</strong></p>
-<ul>
-<li><p>1、先强行删除 clone 来的主题目录下的 .git 文件夹：<br>在<code>themes/next</code>目录下打开命令行工具，执行<code>rd/s/q .git</code>命令，删除成功后执行<code>ls .git</code>命令提示如下内容说明删除成功：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ ls .git</span><br><span class="line">ls: cannot access &apos;.git&apos;: No such file or directory</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>2、回到仓库根目录删除已经托管的空主题文件夹：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm -rf --cached &quot;themes/next&quot;</span><br><span class="line">git commit -m &quot;remove empty folder&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>使名为主题目录不再接受版本控制，所以就没有子模块的冲突了。之后上传不会报上面的错。  </p>
-<h2 id="将-Hexo-博客源文件上传-Git-仓库"><a href="#将-Hexo-博客源文件上传-Git-仓库" class="headerlink" title="将 Hexo 博客源文件上传 Git 仓库"></a>将 Hexo 博客源文件上传 Git 仓库</h2><p>上传后也可以随时拉取代码，方便更新管理项目。<br>在 Github 下创建一个新的<code>repository</code>，命名与本地的源码文件夹同名即可。<br>进入本地的源码根目录，执行以下命令创建仓库:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
-<p>设置远程仓库地址，并更新：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add origin git@github.com:用户名/版本库名(xxx/hexo.git)</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure></p>
-<p>修改<code>.gitignore</code>文件（如果没有请手动创建一个）。如果想忽略掉某个文件，不让这个文件提交到版本库中，可以使用修改 .gitignore 文件的方法。 .gitignore 的匹配规则：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">*.a       # 忽略所有 .a 结尾的文件</span><br><span class="line">!lib.a    # 但 lib.a 除外</span><br><span class="line">/TODO     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO</span><br><span class="line">build/    # 忽略 build/ 目录下的所有文件</span><br><span class="line">doc/*.txt # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt</span><br></pre></td></tr></table></figure></p>
-<p><strong>注意：若有不该提交的文件已经提交后，仅仅在 .gitignore 中加入忽略是不行的。这个时候需要执行：<code>git rm -r --cached 文件/文件夹名字</code>。</strong>  </p>
-<p>在 .gitignore 文件里面加入<code>*.log</code>和 <code>public/</code>以及<code>.deploy*/</code>。因为每次执行<code>hexo generate</code>命令时，上述目录都会被重写更新。因此忽略这两个目录下的文件更新，加快 push 速度。</p>
-<p>执行命令以下命令，完成 Hexo 源码在本地的提交，并将本地的仓库文件推送到 Github。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m &quot;xxx&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure></p>
-<p>这样就可以从其他计算机拉取项目了。</p>
-<h2 id="安装-shelljs-模块"><a href="#安装-shelljs-模块" class="headerlink" title="安装 shelljs 模块"></a>安装 shelljs 模块</h2><p>要实现这个自动备份功能，需要依赖 NodeJs 的一个 shelljs 模块，该模块重新包装了<code>child_process</code>，调用系统命令更加的方便。<br>在命令中键入以下命令，完成 shelljs 模块的安装：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install --save-dev shelljs</span><br></pre></td></tr></table></figure></p>
-<h2 id="编写自动备份脚本"><a href="#编写自动备份脚本" class="headerlink" title="编写自动备份脚本"></a>编写自动备份脚本</h2><p>模块安装完成，在 Hexo 根目录的<code>scripts</code>文件夹下新建一个 js 文件，文件名随意取。（如果没有<code>scripts</code>目录，请新建一个。）<br>然后在脚本中，写入以下内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">require(&apos;shelljs/global&apos;)</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">  hexo.on(&apos;deployAfter&apos;, function() &#123;//当deploy完成后执行备份</span><br><span class="line">    run()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125; catch (e) &#123;</span><br><span class="line">  console.log(&apos;Error:&apos; + e.toString())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function run() &#123;</span><br><span class="line">  if (!which(&apos;git&apos;)) &#123;</span><br><span class="line">    echo(&apos;Sorry, this script requires git&apos;)</span><br><span class="line">    exit(1)</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    echo(&apos;====================== Auto Backup Begin ======================&apos;)</span><br><span class="line">    cd(&apos;/Users/666/Desktop/code/project/Blog&apos;)    //此处修改为Hexo根目录路径</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git add --all&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git add failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git commit -am &quot;Form auto backup script\&apos;s commit&quot;&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git commit failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git push origin master&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git push failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    echo(&apos;====================== Auto Backup Complete ======================&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li><code>cd(&#39;/Users/666/Desktop/code/project/Blog&#39;)</code>路径为本地 Hexo 的根目录路径。</li>
-<li>如果你的 Git 远程仓库名称不为 origin 的话，还需要修改执行的 push 命令，修改成自己的远程仓库名和相应的分支名。</li>
-</ul>
-<p>保存脚本并退出，然后执行<code>hexo deploy</code>命令，将会得到类似以下结果：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br><span class="line">INFO  Deploying: baidu_url_submitter</span><br><span class="line">INFO  Submitting urls</span><br><span class="line">...省略</span><br><span class="line">INFO  Deploy done: baidu_url_submitter</span><br><span class="line">[master 3db66ca] Form auto backup script&apos;s commit</span><br><span class="line"> 4 files changed, 93 insertions(+), 8 deletions(-)</span><br><span class="line"> create mode 100644 source/_posts/hexo-compress.md</span><br><span class="line">To https://github.com/luanzhuxian/Blog.git</span><br><span class="line">   f7e5190..3db66ca  master -&gt; master</span><br><span class="line">==================Auto Backup Complete============================</span><br></pre></td></tr></table></figure></p>
-<p>这样子，每次更新博文并<code>deploy</code>到服务器上之后，备份就自动启动并完成备份啦~</p>
 ]]></content>
       <categories>
         <category>Hexo</category>
