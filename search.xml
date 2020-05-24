@@ -838,6 +838,9 @@
 <p>另外也可以使用数组的 reduce 方法<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const _reverse = string =&gt; string.split(&apos;&apos;).reduce((res, char) =&gt; char + res)</span><br></pre></td></tr></table></figure></p>
 <h2 id="2-回文"><a href="#2-回文" class="headerlink" title="2. 回文"></a>2. 回文</h2><p>回文是一个单词或短语，它的读法是前后一致的。写一个函数来检查。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">describe(&quot;Palindrome&quot;, () =&gt; &#123;</span><br><span class="line">  it(&quot;Should return true&quot;, () =&gt; &#123;</span><br><span class="line">    assert.equal(isPalindrome(&quot;Cigar? Toss it in a can. It is so tragic&quot;), true)</span><br><span class="line">  &#125;)</span><br><span class="line">  it(&quot;Should return false&quot;, () =&gt; &#123;</span><br><span class="line">    assert.equal(isPalindrome(&quot;sit ad est love&quot;), false)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 <p>思考：<br>函数只需要简单地判断输入的单词或短语反转之后是否和原输入相同，完全可以参考第一题的解决方案。我们可以使用数组的 every 方法检查第 i 个字符和第 <code>array.length - i</code> 个字符是否匹配。但是这个方法会使每个字符检查 2 次，这是没必要的。那么，我们可以使用 reduce 方法。和第 1 题一样，时间复杂度和空间复杂度是相同的。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const isPalindrome = string =&gt; &#123;</span><br><span class="line">  const validCharacters = &quot;abcdefghijklmnopqrstuvwxyz&quot;.split(&quot;&quot;)</span><br><span class="line">  const stringCharacters = string // 过滤掉特殊符号</span><br><span class="line">        .toLowerCase()</span><br><span class="line">        .split(&quot;&quot;)</span><br><span class="line">        .reduce(</span><br><span class="line">          (characters, character) =&gt;</span><br><span class="line">            validCharacters.indexOf(character) &gt; -1</span><br><span class="line">              ? characters.concat(character)</span><br><span class="line">              : characters,</span><br><span class="line">          []</span><br><span class="line">        )</span><br><span class="line">  return stringCharacters.join(&quot;&quot;) === stringCharacters.reverse().join(&quot;&quot;) // 转变数据结构</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>简略版<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function isPalindrome (str) &#123;</span><br><span class="line">    let rev = str.split(&apos;&apos;).reverse().join(&apos;&apos;)</span><br><span class="line">    return str === rev</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最长回文：一般方法<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function longestPalindrome  (string) &#123;</span><br><span class="line">    let len = string.length</span><br><span class="line">    let result = &apos;&apos;</span><br><span class="line">    for (let i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        for (let j = i; j &lt; len; j++) &#123;</span><br><span class="line">            let str = string.substring(i, j)</span><br><span class="line">            if (isPalindrome(str) &amp;&amp; str.length &gt; result.length) &#123;</span><br><span class="line">                result = str</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最长回文：动态规划<br>上述一般方法包含很多重复计算，需要改进。我们发现对于<code>&#39;asdsa&#39;</code>，如果已知<code>&#39;sds&#39;</code>是回文，那么<code>&#39;asdsa&#39;</code>也是回文。<br>举例来说，我们用<code>P(i, j)</code>表示子串<code>Si~Sj</code>是否回文，如果是回文则<code>P(i, j)</code>为 true，否则为 false。那么上文就等同为<code>P(i, j) = (P(i + 1, j - 1) &amp;&amp; Si === Sj)</code>。<br>那么我们可以得到一个动态规划解法，首先初始化一字母和二字母的回文，再递增找到三字母的回文，以此类推…<br><code>P(i, j) = true</code>，<code>P(i, i + 1) = (Si === Si+1)</code><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function longestPalindrome  (string) &#123;</span><br><span class="line">    let len = string.length</span><br><span class="line">    let i, j, L       // L是i和j之间的间隔数（因为间隔数从小到大渐增，所以大的间隔数总能包含小的间隔数）</span><br><span class="line">    let result = &apos;&apos;</span><br><span class="line">    let matrix = Array(len).fill(0).map(x =&gt; Array(len).fill(0))  // 生成 len * len 矩阵</span><br><span class="line"></span><br><span class="line">    if (len &lt;= 1)&#123;</span><br><span class="line">        return string</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 初始化只有一个字符是回文的情况</span><br><span class="line">    for (i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        matrix[i][i] = 1</span><br><span class="line">        result = string[i]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // L从2开始，找出二字回文的情况，依次递增</span><br><span class="line">    // 例如 &apos;abcdcba&apos;.length = L，若首尾的 a 各为 i、j位，则 L = j - i + 1，所以 j = i + L - 1</span><br><span class="line">    for ( L = 2; L &lt;= len; L++) &#123;</span><br><span class="line">        // 从0开始，</span><br><span class="line">        for ( i = 0; i &lt;= len - L; i++) &#123;</span><br><span class="line">            // 根据当前的 i 和 L 得到 j</span><br><span class="line">            j = i + L - 1</span><br><span class="line">            if (L === 2 &amp;&amp; string[i] === string[j]) &#123;</span><br><span class="line">                matrix[i][j] = 1</span><br><span class="line">                result = string.slice(i, i + L)</span><br><span class="line">            &#125; else if (string[i] === string[j] &amp;&amp; matrix[i + 1][j - 1] === 1) &#123;</span><br><span class="line">                matrix[i][j] = 1</span><br><span class="line">                result = string.slice(i, i + L)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="3-整数反转"><a href="#3-整数反转" class="headerlink" title="3. 整数反转"></a>3. 整数反转</h2><p>给定一个整数，反转数字的顺序。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">describe(&quot;Integer Reversal&quot;, () =&gt; &#123;</span><br><span class="line">  it(&quot;Should reverse integer&quot;, () =&gt; &#123;</span><br><span class="line">    assert.equal(reverse(1234), 4321)</span><br><span class="line">    assert.equal(reverse(-1200), -21)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 <p>思考：<br>把 number 类型使用 toString 方法换成字符串，然后就可以按照字符串反转的步骤来做。反转完成之后，使用 parseInt 方法转回 number 类型，然后使用 Math.sign 加入符号，只需一行代码便可完成。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const revserInteger = integer =&gt; parseInt(</span><br><span class="line">      number.toString()</span><br><span class="line">        .split(&apos;&apos;)</span><br><span class="line">        .reverse()</span><br><span class="line">        .join(&apos;&apos;)</span><br><span class="line">      ) * Math.sign(integer)</span><br></pre></td></tr></table></figure></p>
 <h2 id="4-出现次数最多的字符"><a href="#4-出现次数最多的字符" class="headerlink" title="4. 出现次数最多的字符"></a>4. 出现次数最多的字符</h2><p>给定一个字符串，返回出现次数最多的字符<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">describe(&quot;Max Character&quot;, () =&gt; &#123;</span><br><span class="line">  it(&quot;Should return max character&quot;, () =&gt; &#123;</span><br><span class="line">    assert.equal(max(&quot;Hello World!&quot;), &quot;l&quot;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
@@ -854,7 +857,21 @@
 <p>思考：<br>首先我们需要一个包含所有字母的数组，这意味着我们需要把给定的字符串转为小写，然后遍历整个字符串，给每个字符增加或减少给定的整数位置，最后判断大小写即可。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const caesarCipher = (str, number) =&gt; &#123;</span><br><span class="line">  const alphabet = &quot;abcdefghijklmnopqrstuvwxyz&quot;.split(&quot;&quot;)</span><br><span class="line">    const string = str.toLowerCase()</span><br><span class="line">    const remainder = number % 26</span><br><span class="line">    let outPut = &apos;&apos;</span><br><span class="line">    for (let i = 0; i &lt; string.length; i++) &#123;</span><br><span class="line">      const letter = string[i]</span><br><span class="line">      if (!alphabet.includes(letter)) &#123;</span><br><span class="line">        outPut += letter</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        let index = alphabet.indexOf(letter) + remainder</span><br><span class="line">        if (index &gt; 25) &#123;</span><br><span class="line">          index -= 26</span><br><span class="line">        &#125;</span><br><span class="line">        if (index &lt; 0) &#123;</span><br><span class="line">          index += 26</span><br><span class="line">        &#125;</span><br><span class="line">        outPut += str[i] === str[i].toUpperCase() ? alphabet[index].toUpperCase() : alphabet[index]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  return outPut</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="10-找出从-0-开始到给定整数的所有质数"><a href="#10-找出从-0-开始到给定整数的所有质数" class="headerlink" title="10. 找出从 0 开始到给定整数的所有质数"></a>10. 找出从 0 开始到给定整数的所有质数</h2><p>给定一个短语，通过在字母表中上下移动一个给定的整数来替换每个字符。如果有必要，这种转换应该回到字母表的开头或结尾。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">describe(&quot;Sieve of Eratosthenes&quot;, () =&gt; &#123;</span><br><span class="line">  it(&quot;Should return all prime numbers&quot;, () =&gt; &#123;</span><br><span class="line">    assert.deepEqual(primes(10), [2, 3, 5, 7])</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 <p>思考：<br>最简单的方法是我们循环从 0 开始到给定整数的每个整数，并创建一个方法检查它是否是质数。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const isPrime = n =&gt; &#123;</span><br><span class="line">  if (n &gt; 1 &amp;&amp; n &lt;= 3) &#123;</span><br><span class="line">      return true</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      for(let i = 2; i &lt;= Math.sqrt(n); i++)&#123;</span><br><span class="line">        if (n % i == 0) &#123;</span><br><span class="line">          return false</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const prime = number =&gt; &#123;</span><br><span class="line">  const primes = []</span><br><span class="line">  for (let i = 2; i &lt; number; i++) &#123;</span><br><span class="line">    if (isPrime(i)) &#123;</span><br><span class="line">      primes.push(i)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return primes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-]]></content>
+<h2 id="11-爬楼梯"><a href="#11-爬楼梯" class="headerlink" title="11. 爬楼梯"></a>11. 爬楼梯</h2><p>假设你正在爬楼梯。需要 n 阶你才能到达楼顶。每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？<br>爬楼梯其实属于动态规划一类。举例来说：倒着思考，当已经到达三层的时候，是怎样爬上来的？<br><code>f(3) = f(2) + f(1)</code>，即从第二阶走一步上来或者从第一阶走两步上来。<br>通过递推归纳：<code>f(n) = f(n-2) + f(n-1)</code>，从第 n-2 阶台阶走一步上来或者从第 n-1 阶台阶走两步上来。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Fibonacci(n) &#123;</span><br><span class="line">    var a = [0, 1, 2]</span><br><span class="line">    for (var i = 3; i &lt;= n; i++) &#123;</span><br><span class="line">        a[i] = a[i-1] + a[i-2]</span><br><span class="line">    &#125;</span><br><span class="line">    return a[n]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="12-快速排序"><a href="#12-快速排序" class="headerlink" title="12. 快速排序"></a>12. 快速排序</h2><p>方法一：  </p>
+<ol>
+<li>在数据集之中，选择一个元素作为基准（pivot）。</li>
+<li>所有小于基准的元素，都移到基准的左边；所有大于基准的元素，都移到基准的右边。</li>
+<li>对基准左边和右边的两个子集，不断重复第一步和第二步，直到所有子集只剩下一个元素为止。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function quickSort (arr) &#123;</span><br><span class="line"></span><br><span class="line">　　if (arr.length &lt;= 1) &#123; </span><br><span class="line">      return arr </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    const pivotIndex = Math.floor(arr.length / 2)</span><br><span class="line">    const pivot = arr.splice(pivotIndex, 1)[0]</span><br><span class="line">    const left = []</span><br><span class="line">    const right = []</span><br><span class="line"></span><br><span class="line">　　for (var i = 0; i &lt; arr.length; i++) &#123;</span><br><span class="line">　　　　if (arr[i] &lt; pivot) &#123;</span><br><span class="line">　　　　　　left.push(arr[i])</span><br><span class="line">　　　　&#125; else &#123;</span><br><span class="line">　　　　　　right.push(arr[i])</span><br><span class="line">　　　　&#125;</span><br><span class="line">　　&#125;</span><br><span class="line"></span><br><span class="line">　　return quickSort(left).concat([pivot], quickSort(right))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>方法二：</p>
+<ol>
+<li>首先，从数组中选择中间一项作为主元。</li>
+<li>创建两个指针，左边一个指向数组第一项，右边一个指向数组最后一项。移动左指针直到找到一个比主元大的元素，接着，移动右指针直到找到一个比主元小的元素，然后交换它们，重复这个过程，直到左指针超过右指针。这个过程将使得比主元小的值都排在主元之前，比主元大的值都排在主元之后。这一部叫做划分操作。</li>
+<li>接着，算法对划分后的小数组重复之前的两个步骤，直至数组已完全排序。  </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function swap (array, index1, index2) &#123;</span><br><span class="line">  [array[index1], array[index2]] = [array[index2], array[index1]]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 划分操作</span><br><span class="line">function partition (array, left, right) &#123;</span><br><span class="line">  const pivot = array[Math.floor((right + left) / 2)]</span><br><span class="line">  let i = left</span><br><span class="line">  let j = right</span><br><span class="line"></span><br><span class="line">  // 只要 left 和 right 没有交错，就执行划分 </span><br><span class="line">  while (i &lt; j) &#123;</span><br><span class="line">    while (array[i] &lt; pivot) &#123;  // 找到一个比主元大的元素</span><br><span class="line">      i++</span><br><span class="line">    &#125;</span><br><span class="line">    while (array[j] &gt; pivot) &#123;  // 找到一个比主元小的元素</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    if (i &lt;= j) &#123;</span><br><span class="line">      swap(array, i, j)</span><br><span class="line">      i++</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function quick (array, left, right) &#123;</span><br><span class="line">  let index</span><br><span class="line">  if (array.length &gt; 1) &#123;</span><br><span class="line">    index = partition(array, left, right)</span><br><span class="line"></span><br><span class="line">    // 存在较小子数组，对较小子数组快排</span><br><span class="line">    if (left &lt; index - 1) &#123;</span><br><span class="line">      quick(array, left, index - 1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 存在较大子数组，对较大子数组快排</span><br><span class="line">    if (index &lt; right) &#123;</span><br><span class="line">      quick(array, index, right)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function quickSort () &#123;</span><br><span class="line">  // 第一次快排整个数组</span><br><span class="line">  quick(array, 0, array.length - 1)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>javascript</category>
       </categories>
@@ -1230,6 +1247,81 @@
       </tags>
   </entry>
   <entry>
+    <title>自动备份 Hexo 博客文件</title>
+    <url>/post/a433710c.html</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>每次更新博文都需要输入两三行重复的Git命令比较麻烦，下面介绍一种自动备份 Hexo 博客源文件的方法。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>通过通过监听 Hexo 的事件来完成自动执行Git命令完成自动备份。通过查阅 <a href="https://hexo.io/zh-cn/api/events.html" target="_blank" rel="noopener">Hexo文档</a>，找到了 Hexo 的主要事件，见下表：</p>
+<table>
+<thead>
+<tr>
+<th>事件名</th>
+<th>事件发生时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>deployBefore</td>
+<td>在部署完成前发布</td>
+</tr>
+<tr>
+<td>deployAfter</td>
+<td>在部署成功后发布</td>
+</tr>
+<tr>
+<td>exit</td>
+<td>在 Hexo 结束前发布</td>
+</tr>
+<tr>
+<td>generateBefore</td>
+<td>在静态文件生成前发布</td>
+</tr>
+<tr>
+<td>generateAfter</td>
+<td>在静态文件生成后发布</td>
+</tr>
+<tr>
+<td>new</td>
+<td>在文章文件建立后发布</td>
+</tr>
+</tbody>
+</table>
+<p>于是我们就可以通过监听 Hexo 的<code>deployAfter</code>事件，待上传完成之后自动运行 Git 备份命令，从而达到自动备份的目的。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="删除-Next-主题的-git-缓存文件夹"><a href="#删除-Next-主题的-git-缓存文件夹" class="headerlink" title="删除 Next 主题的 .git 缓存文件夹"></a>删除 Next 主题的 .git 缓存文件夹</h2><p>我们如果要将项目上传到远程仓库，先要<code>git add .</code>添加到暂存区，然后<code>git commit</code>，这时会出现如下报错：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Changes not staged for commit:</span><br><span class="line">        modified:   themes/xxx</span><br></pre></td></tr></table></figure></p>
+<p>并且提交后会发现远程仓库主题文件夹都是空的。因为位于<code>themes</code>文件夹下的主题是从另一个 git 仓库上 clone 过来的，由于你 clone 下来的文件夹也是一个 git 仓库，因此正常的<code>git add .</code>是无法提交该文件夹下的文件的，会和 Hexo 仓库冲突，每次提交只会提交 Hexo 项目的修改，而不会提交 Next 主题的修改。  所以我们要先删除<code>.git缓存文件</code>。  </p>
+<p><strong>解决方案：</strong></p>
+<ul>
+<li><p>1、先强行删除 clone 来的主题目录下的 .git 文件夹：<br>在<code>themes/next</code>目录下打开命令行工具，执行<code>rd/s/q .git</code>命令，删除成功后执行<code>ls .git</code>命令提示如下内容说明删除成功：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ ls .git</span><br><span class="line">ls: cannot access &apos;.git&apos;: No such file or directory</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>2、回到仓库根目录删除已经托管的空主题文件夹：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm -rf --cached &quot;themes/next&quot;</span><br><span class="line">git commit -m &quot;remove empty folder&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>使名为主题目录不再接受版本控制，所以就没有子模块的冲突了。之后上传不会报上面的错。  </p>
+<h2 id="将-Hexo-博客源文件上传-Git-仓库"><a href="#将-Hexo-博客源文件上传-Git-仓库" class="headerlink" title="将 Hexo 博客源文件上传 Git 仓库"></a>将 Hexo 博客源文件上传 Git 仓库</h2><p>上传后也可以随时拉取代码，方便更新管理项目。<br>在 Github 下创建一个新的<code>repository</code>，命名与本地的源码文件夹同名即可。<br>进入本地的源码根目录，执行以下命令创建仓库:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
+<p>设置远程仓库地址，并更新：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add origin git@github.com:用户名/版本库名(xxx/hexo.git)</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure></p>
+<p>修改<code>.gitignore</code>文件（如果没有请手动创建一个）。如果想忽略掉某个文件，不让这个文件提交到版本库中，可以使用修改 .gitignore 文件的方法。 .gitignore 的匹配规则：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">*.a       # 忽略所有 .a 结尾的文件</span><br><span class="line">!lib.a    # 但 lib.a 除外</span><br><span class="line">/TODO     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO</span><br><span class="line">build/    # 忽略 build/ 目录下的所有文件</span><br><span class="line">doc/*.txt # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt</span><br></pre></td></tr></table></figure></p>
+<p><strong>注意：若有不该提交的文件已经提交后，仅仅在 .gitignore 中加入忽略是不行的。这个时候需要执行：<code>git rm -r --cached 文件/文件夹名字</code>。</strong>  </p>
+<p>在 .gitignore 文件里面加入<code>*.log</code>和 <code>public/</code>以及<code>.deploy*/</code>。因为每次执行<code>hexo generate</code>命令时，上述目录都会被重写更新。因此忽略这两个目录下的文件更新，加快 push 速度。</p>
+<p>执行命令以下命令，完成 Hexo 源码在本地的提交，并将本地的仓库文件推送到 Github。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m &quot;xxx&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以从其他计算机拉取项目了。</p>
+<h2 id="安装-shelljs-模块"><a href="#安装-shelljs-模块" class="headerlink" title="安装 shelljs 模块"></a>安装 shelljs 模块</h2><p>要实现这个自动备份功能，需要依赖 NodeJs 的一个 shelljs 模块，该模块重新包装了<code>child_process</code>，调用系统命令更加的方便。<br>在命令中键入以下命令，完成 shelljs 模块的安装：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install --save-dev shelljs</span><br></pre></td></tr></table></figure></p>
+<h2 id="编写自动备份脚本"><a href="#编写自动备份脚本" class="headerlink" title="编写自动备份脚本"></a>编写自动备份脚本</h2><p>模块安装完成，在 Hexo 根目录的<code>scripts</code>文件夹下新建一个 js 文件，文件名随意取。（如果没有<code>scripts</code>目录，请新建一个。）<br>然后在脚本中，写入以下内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">require(&apos;shelljs/global&apos;)</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">  hexo.on(&apos;deployAfter&apos;, function() &#123;//当deploy完成后执行备份</span><br><span class="line">    run()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125; catch (e) &#123;</span><br><span class="line">  console.log(&apos;Error:&apos; + e.toString())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function run() &#123;</span><br><span class="line">  if (!which(&apos;git&apos;)) &#123;</span><br><span class="line">    echo(&apos;Sorry, this script requires git&apos;)</span><br><span class="line">    exit(1)</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    echo(&apos;====================== Auto Backup Begin ======================&apos;)</span><br><span class="line">    cd(&apos;/Users/666/Desktop/code/project/Blog&apos;)    //此处修改为Hexo根目录路径</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git add --all&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git add failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git commit -am &quot;Form auto backup script\&apos;s commit&quot;&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git commit failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git push origin master&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git push failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    echo(&apos;====================== Auto Backup Complete ======================&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>cd(&#39;/Users/666/Desktop/code/project/Blog&#39;)</code>路径为本地 Hexo 的根目录路径。</li>
+<li>如果你的 Git 远程仓库名称不为 origin 的话，还需要修改执行的 push 命令，修改成自己的远程仓库名和相应的分支名。</li>
+</ul>
+<p>保存脚本并退出，然后执行<code>hexo deploy</code>命令，将会得到类似以下结果：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br><span class="line">INFO  Deploying: baidu_url_submitter</span><br><span class="line">INFO  Submitting urls</span><br><span class="line">...省略</span><br><span class="line">INFO  Deploy done: baidu_url_submitter</span><br><span class="line">[master 3db66ca] Form auto backup script&apos;s commit</span><br><span class="line"> 4 files changed, 93 insertions(+), 8 deletions(-)</span><br><span class="line"> create mode 100644 source/_posts/hexo-compress.md</span><br><span class="line">To https://github.com/luanzhuxian/Blog.git</span><br><span class="line">   f7e5190..3db66ca  master -&gt; master</span><br><span class="line">==================Auto Backup Complete============================</span><br></pre></td></tr></table></figure></p>
+<p>这样子，每次更新博文并<code>deploy</code>到服务器上之后，备份就自动启动并完成备份啦~</p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo 搭建博客</title>
     <url>/post/73f1724d.html</url>
     <content><![CDATA[<blockquote bgcolor="#FF4500"><a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页</blockquote>
@@ -1351,22 +1443,27 @@
       </tags>
   </entry>
   <entry>
-    <title>Hexo 添加文章时自动打开编辑器</title>
-    <url>/post/e7fa2d4f.html</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在 Hexo 中新建一篇博文非常简单，只需要在命令行中键入以下命令然后回车即可：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new &quot;The title of your blog&quot;</span><br></pre></td></tr></table></figure></p>
-<p>此后便会在 Hexo 的根目录的<code>source/_posts</code>目录下自动帮你创建相应的 md 文件。然后我们打开该目录，找到刚刚 Hexo 自动生成的文件打开编辑即可。</p>
-<p>但是当我们的博文比较多，这样我们就需要在成堆的 Markdown 文件中找到刚才自动生成的文件，这样做显然是一件比较痛苦的事情。下面介绍一种添加文章时自动打开编辑器的方法。</p>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>利用 NodeJS 的事件监听机制实现监听 Hexo 的 new 事件来启动编辑器，完成自动启动编辑器的操作。  </p>
-<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><ul>
-<li>首先在 Hexo 目录下的<code>scripts</code>目录中创建一个 JavaScript 脚本文件。</li>
-<li>如果没有这个<code>scripts</code>目录，则新建一个。</li>
-<li><code>scripts</code>目录新建的 JavaScript 脚本文件可以任意取名。</li>
+    <title>Hexo + Next 添加文章阅读量统计</title>
+    <url>/post/ec069b41.html</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于 <a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a> 这家服务提供商，实现 Hexo 博客文章的浏览数统计功能。  </p>
+<p> Next 主题目前已经合并这个功能，相关代码在<code>themes\next\layout\_third-party\analytics\lean-analytics.swig</code>，可以不用修改主题模版，直接在<code>_config.yml</code>中配置即可。</p>
+<h2 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置LeanCloud</h2><p>在注册完成 LeanCloud 帐号并验证邮箱之后，我们就可以登录帐号。</p>
+<h3 id="1、创建一个开发版应用（免费）："><a href="#1、创建一个开发版应用（免费）：" class="headerlink" title="1、创建一个开发版应用（免费）："></a>1、创建一个开发版应用（免费）：</h3><p>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台点击创建应用：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud.png" alt="avatar"><br>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-application.png" alt="avatar"></p>
+<h3 id="2、设置"><a href="#2、设置" class="headerlink" title="2、设置"></a>2、设置</h3><p>在<code>LeanCloud &gt; 设置 &gt; 安全中心</code>中，<code>服务开关</code>部分只开启<code>数据存储</code>。<br>因为<code>AppID</code>以及<code>AppKey</code>是暴露在外的，为了确保只用于我们自己的博客，建议开启<code>Web安全选项</code>，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。<code>Web安全域名</code>下面要添加你的 Github Page 域名，来确保数据调用的安全：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-setting.png" alt="avatar"></p>
+<h3 id="3、创建Class"><a href="#3、创建Class" class="headerlink" title="3、创建Class"></a>3、创建Class</h3><p>在应用的数据配置界面，左侧数据栏下，下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。<br>点击顶部的加号图标<code>新建Class</code>。在弹出的选项中选择<code>创建Class</code>用来专门保存我们博客的文章访问量等数据:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-class.png" alt="avatar"><br><strong>注意：</strong></p>
+<ul>
+<li><strong>为了保证我们前面对 NexT 主题的修改兼容，此处的<font color="red">Class名称必须为Counter</font>。</strong></li>
+<li><strong>由于 LeanCloud 升级了默认的 ACL 权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择无限制。</strong>  </li>
 </ul>
-<p>通过这个脚本，我们用其来监听<code>hexo new</code>这个动作，并在检测到<code>hexo new</code>之后，执行编辑器打开的命令。</p>
-<p>如果你是 Windows 平台的用户，则将下列内容写入你的脚本：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var spawn = require(&apos;child_process&apos;).exec</span><br><span class="line"></span><br><span class="line">// Hexo 2.x 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(path)&#123;</span><br><span class="line">  spawn(&apos;start  &quot;markdown编辑器绝对路径.exe&quot; &apos; + path)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// Hexo 3 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(data)&#123;</span><br><span class="line">  spawn(&apos;start  &quot;markdown编辑器绝对路径.exe&quot; &apos; + data.path)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-<p>如果你是 Mac 平台用户，则将下列内容写入你的脚本：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var exec = require(&apos;child_process&apos;).exec</span><br><span class="line"></span><br><span class="line">// Hexo 2.x 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(path)&#123;</span><br><span class="line">    exec(&apos;open -a &quot;markdown编辑器绝对路径.app&quot; &apos; + path)</span><br><span class="line">&#125;)</span><br><span class="line">// Hexo 3 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(data)&#123;</span><br><span class="line">    exec(&apos;open -a &quot;markdown编辑器绝对路径.app&quot; &apos; + data.path)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-<p>保存并退出脚本之后，在命令行中键入：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new &quot;auto open editor test&quot;</span><br></pre></td></tr></table></figure></p>
-<p>就可以顺利的自动打开自动生成的md文件啦~</p>
+<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击最左侧菜单栏的设置。<br>在设置界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>App ID</code>以及<code>App Key</code>，有了它，我们就有权限能够通过主题中配置好的 Javascript 代码与这个应用的<code>Counter表</code>进行数据存取操作了:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-key.png" alt="avatar"></p>
+<h3 id="4、修改next配置"><a href="#4、修改next配置" class="headerlink" title="4、修改next配置"></a>4、修改next配置</h3><p>复制<code>AppID</code>以及<code>AppKey</code>并在 Next 主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz</span><br><span class="line">  app_key: qODRtEtDSVo4Mxj6DkhVAqd9</span><br></pre></td></tr></table></figure></p>
+<p>这个时候重新生成部署 Hexo 博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的发布日期以及文章的标题，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
+<h2 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h2><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们 LeanCloud 对应的应用的<code>Counter 表</code>中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter表</code>中。</p>
+<ul>
+<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
+<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
+<li>其他字段皆为自动生成，具体作用请查阅 LeanCloud 官方文档，如果你不知道有什么作用请不要随意修改。</li>
+</ul>
 ]]></content>
       <categories>
         <category>Hexo</category>
@@ -1475,102 +1572,22 @@
       </tags>
   </entry>
   <entry>
-    <title>自动备份 Hexo 博客文件</title>
-    <url>/post/a433710c.html</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>每次更新博文都需要输入两三行重复的Git命令比较麻烦，下面介绍一种自动备份 Hexo 博客源文件的方法。</p>
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>通过通过监听 Hexo 的事件来完成自动执行Git命令完成自动备份。通过查阅 <a href="https://hexo.io/zh-cn/api/events.html" target="_blank" rel="noopener">Hexo文档</a>，找到了 Hexo 的主要事件，见下表：</p>
-<table>
-<thead>
-<tr>
-<th>事件名</th>
-<th>事件发生时间</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>deployBefore</td>
-<td>在部署完成前发布</td>
-</tr>
-<tr>
-<td>deployAfter</td>
-<td>在部署成功后发布</td>
-</tr>
-<tr>
-<td>exit</td>
-<td>在 Hexo 结束前发布</td>
-</tr>
-<tr>
-<td>generateBefore</td>
-<td>在静态文件生成前发布</td>
-</tr>
-<tr>
-<td>generateAfter</td>
-<td>在静态文件生成后发布</td>
-</tr>
-<tr>
-<td>new</td>
-<td>在文章文件建立后发布</td>
-</tr>
-</tbody>
-</table>
-<p>于是我们就可以通过监听 Hexo 的<code>deployAfter</code>事件，待上传完成之后自动运行 Git 备份命令，从而达到自动备份的目的。</p>
-<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="删除-Next-主题的-git-缓存文件夹"><a href="#删除-Next-主题的-git-缓存文件夹" class="headerlink" title="删除 Next 主题的 .git 缓存文件夹"></a>删除 Next 主题的 .git 缓存文件夹</h2><p>我们如果要将项目上传到远程仓库，先要<code>git add .</code>添加到暂存区，然后<code>git commit</code>，这时会出现如下报错：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Changes not staged for commit:</span><br><span class="line">        modified:   themes/xxx</span><br></pre></td></tr></table></figure></p>
-<p>并且提交后会发现远程仓库主题文件夹都是空的。因为位于<code>themes</code>文件夹下的主题是从另一个 git 仓库上 clone 过来的，由于你 clone 下来的文件夹也是一个 git 仓库，因此正常的<code>git add .</code>是无法提交该文件夹下的文件的，会和 Hexo 仓库冲突，每次提交只会提交 Hexo 项目的修改，而不会提交 Next 主题的修改。  所以我们要先删除<code>.git缓存文件</code>。  </p>
-<p><strong>解决方案：</strong></p>
-<ul>
-<li><p>1、先强行删除 clone 来的主题目录下的 .git 文件夹：<br>在<code>themes/next</code>目录下打开命令行工具，执行<code>rd/s/q .git</code>命令，删除成功后执行<code>ls .git</code>命令提示如下内容说明删除成功：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ ls .git</span><br><span class="line">ls: cannot access &apos;.git&apos;: No such file or directory</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>2、回到仓库根目录删除已经托管的空主题文件夹：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm -rf --cached &quot;themes/next&quot;</span><br><span class="line">git commit -m &quot;remove empty folder&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
-</li>
+    <title>Hexo 添加文章时自动打开编辑器</title>
+    <url>/post/e7fa2d4f.html</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在 Hexo 中新建一篇博文非常简单，只需要在命令行中键入以下命令然后回车即可：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new &quot;The title of your blog&quot;</span><br></pre></td></tr></table></figure></p>
+<p>此后便会在 Hexo 的根目录的<code>source/_posts</code>目录下自动帮你创建相应的 md 文件。然后我们打开该目录，找到刚刚 Hexo 自动生成的文件打开编辑即可。</p>
+<p>但是当我们的博文比较多，这样我们就需要在成堆的 Markdown 文件中找到刚才自动生成的文件，这样做显然是一件比较痛苦的事情。下面介绍一种添加文章时自动打开编辑器的方法。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>利用 NodeJS 的事件监听机制实现监听 Hexo 的 new 事件来启动编辑器，完成自动启动编辑器的操作。  </p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><ul>
+<li>首先在 Hexo 目录下的<code>scripts</code>目录中创建一个 JavaScript 脚本文件。</li>
+<li>如果没有这个<code>scripts</code>目录，则新建一个。</li>
+<li><code>scripts</code>目录新建的 JavaScript 脚本文件可以任意取名。</li>
 </ul>
-<p>使名为主题目录不再接受版本控制，所以就没有子模块的冲突了。之后上传不会报上面的错。  </p>
-<h2 id="将-Hexo-博客源文件上传-Git-仓库"><a href="#将-Hexo-博客源文件上传-Git-仓库" class="headerlink" title="将 Hexo 博客源文件上传 Git 仓库"></a>将 Hexo 博客源文件上传 Git 仓库</h2><p>上传后也可以随时拉取代码，方便更新管理项目。<br>在 Github 下创建一个新的<code>repository</code>，命名与本地的源码文件夹同名即可。<br>进入本地的源码根目录，执行以下命令创建仓库:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
-<p>设置远程仓库地址，并更新：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add origin git@github.com:用户名/版本库名(xxx/hexo.git)</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure></p>
-<p>修改<code>.gitignore</code>文件（如果没有请手动创建一个）。如果想忽略掉某个文件，不让这个文件提交到版本库中，可以使用修改 .gitignore 文件的方法。 .gitignore 的匹配规则：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">*.a       # 忽略所有 .a 结尾的文件</span><br><span class="line">!lib.a    # 但 lib.a 除外</span><br><span class="line">/TODO     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO</span><br><span class="line">build/    # 忽略 build/ 目录下的所有文件</span><br><span class="line">doc/*.txt # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt</span><br></pre></td></tr></table></figure></p>
-<p><strong>注意：若有不该提交的文件已经提交后，仅仅在 .gitignore 中加入忽略是不行的。这个时候需要执行：<code>git rm -r --cached 文件/文件夹名字</code>。</strong>  </p>
-<p>在 .gitignore 文件里面加入<code>*.log</code>和 <code>public/</code>以及<code>.deploy*/</code>。因为每次执行<code>hexo generate</code>命令时，上述目录都会被重写更新。因此忽略这两个目录下的文件更新，加快 push 速度。</p>
-<p>执行命令以下命令，完成 Hexo 源码在本地的提交，并将本地的仓库文件推送到 Github。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m &quot;xxx&quot;</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure></p>
-<p>这样就可以从其他计算机拉取项目了。</p>
-<h2 id="安装-shelljs-模块"><a href="#安装-shelljs-模块" class="headerlink" title="安装 shelljs 模块"></a>安装 shelljs 模块</h2><p>要实现这个自动备份功能，需要依赖 NodeJs 的一个 shelljs 模块，该模块重新包装了<code>child_process</code>，调用系统命令更加的方便。<br>在命令中键入以下命令，完成 shelljs 模块的安装：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install --save-dev shelljs</span><br></pre></td></tr></table></figure></p>
-<h2 id="编写自动备份脚本"><a href="#编写自动备份脚本" class="headerlink" title="编写自动备份脚本"></a>编写自动备份脚本</h2><p>模块安装完成，在 Hexo 根目录的<code>scripts</code>文件夹下新建一个 js 文件，文件名随意取。（如果没有<code>scripts</code>目录，请新建一个。）<br>然后在脚本中，写入以下内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">require(&apos;shelljs/global&apos;)</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">  hexo.on(&apos;deployAfter&apos;, function() &#123;//当deploy完成后执行备份</span><br><span class="line">    run()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125; catch (e) &#123;</span><br><span class="line">  console.log(&apos;Error:&apos; + e.toString())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function run() &#123;</span><br><span class="line">  if (!which(&apos;git&apos;)) &#123;</span><br><span class="line">    echo(&apos;Sorry, this script requires git&apos;)</span><br><span class="line">    exit(1)</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    echo(&apos;====================== Auto Backup Begin ======================&apos;)</span><br><span class="line">    cd(&apos;/Users/666/Desktop/code/project/Blog&apos;)    //此处修改为Hexo根目录路径</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git add --all&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git add failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git commit -am &quot;Form auto backup script\&apos;s commit&quot;&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git commit failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (exec(&apos;git push origin master&apos;).code !== 0) &#123;</span><br><span class="line">      echo(&apos;Error: Git push failed&apos;)</span><br><span class="line">      exit(1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    echo(&apos;====================== Auto Backup Complete ======================&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li><code>cd(&#39;/Users/666/Desktop/code/project/Blog&#39;)</code>路径为本地 Hexo 的根目录路径。</li>
-<li>如果你的 Git 远程仓库名称不为 origin 的话，还需要修改执行的 push 命令，修改成自己的远程仓库名和相应的分支名。</li>
-</ul>
-<p>保存脚本并退出，然后执行<code>hexo deploy</code>命令，将会得到类似以下结果：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br><span class="line">INFO  Deploying: baidu_url_submitter</span><br><span class="line">INFO  Submitting urls</span><br><span class="line">...省略</span><br><span class="line">INFO  Deploy done: baidu_url_submitter</span><br><span class="line">[master 3db66ca] Form auto backup script&apos;s commit</span><br><span class="line"> 4 files changed, 93 insertions(+), 8 deletions(-)</span><br><span class="line"> create mode 100644 source/_posts/hexo-compress.md</span><br><span class="line">To https://github.com/luanzhuxian/Blog.git</span><br><span class="line">   f7e5190..3db66ca  master -&gt; master</span><br><span class="line">==================Auto Backup Complete============================</span><br></pre></td></tr></table></figure></p>
-<p>这样子，每次更新博文并<code>deploy</code>到服务器上之后，备份就自动启动并完成备份啦~</p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo + Next 添加文章阅读量统计</title>
-    <url>/post/ec069b41.html</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于 <a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a> 这家服务提供商，实现 Hexo 博客文章的浏览数统计功能。  </p>
-<p> Next 主题目前已经合并这个功能，相关代码在<code>themes\next\layout\_third-party\analytics\lean-analytics.swig</code>，可以不用修改主题模版，直接在<code>_config.yml</code>中配置即可。</p>
-<h2 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置LeanCloud</h2><p>在注册完成 LeanCloud 帐号并验证邮箱之后，我们就可以登录帐号。</p>
-<h3 id="1、创建一个开发版应用（免费）："><a href="#1、创建一个开发版应用（免费）：" class="headerlink" title="1、创建一个开发版应用（免费）："></a>1、创建一个开发版应用（免费）：</h3><p>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台点击创建应用：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud.png" alt="avatar"><br>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-application.png" alt="avatar"></p>
-<h3 id="2、设置"><a href="#2、设置" class="headerlink" title="2、设置"></a>2、设置</h3><p>在<code>LeanCloud &gt; 设置 &gt; 安全中心</code>中，<code>服务开关</code>部分只开启<code>数据存储</code>。<br>因为<code>AppID</code>以及<code>AppKey</code>是暴露在外的，为了确保只用于我们自己的博客，建议开启<code>Web安全选项</code>，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。<code>Web安全域名</code>下面要添加你的 Github Page 域名，来确保数据调用的安全：<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-setting.png" alt="avatar"></p>
-<h3 id="3、创建Class"><a href="#3、创建Class" class="headerlink" title="3、创建Class"></a>3、创建Class</h3><p>在应用的数据配置界面，左侧数据栏下，下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。<br>点击顶部的加号图标<code>新建Class</code>。在弹出的选项中选择<code>创建Class</code>用来专门保存我们博客的文章访问量等数据:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-class.png" alt="avatar"><br><strong>注意：</strong></p>
-<ul>
-<li><strong>为了保证我们前面对 NexT 主题的修改兼容，此处的<font color="red">Class名称必须为Counter</font>。</strong></li>
-<li><strong>由于 LeanCloud 升级了默认的 ACL 权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择无限制。</strong>  </li>
-</ul>
-<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击最左侧菜单栏的设置。<br>在设置界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>App ID</code>以及<code>App Key</code>，有了它，我们就有权限能够通过主题中配置好的 Javascript 代码与这个应用的<code>Counter表</code>进行数据存取操作了:<br><img src="http://pw5hoox1r.bkt.clouddn.com/blog/leancloud-key.png" alt="avatar"></p>
-<h3 id="4、修改next配置"><a href="#4、修改next配置" class="headerlink" title="4、修改next配置"></a>4、修改next配置</h3><p>复制<code>AppID</code>以及<code>AppKey</code>并在 Next 主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz</span><br><span class="line">  app_key: qODRtEtDSVo4Mxj6DkhVAqd9</span><br></pre></td></tr></table></figure></p>
-<p>这个时候重新生成部署 Hexo 博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的发布日期以及文章的标题，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
-<h2 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h2><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们 LeanCloud 对应的应用的<code>Counter 表</code>中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter表</code>中。</p>
-<ul>
-<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
-<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
-<li>其他字段皆为自动生成，具体作用请查阅 LeanCloud 官方文档，如果你不知道有什么作用请不要随意修改。</li>
-</ul>
+<p>通过这个脚本，我们用其来监听<code>hexo new</code>这个动作，并在检测到<code>hexo new</code>之后，执行编辑器打开的命令。</p>
+<p>如果你是 Windows 平台的用户，则将下列内容写入你的脚本：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var spawn = require(&apos;child_process&apos;).exec</span><br><span class="line"></span><br><span class="line">// Hexo 2.x 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(path)&#123;</span><br><span class="line">  spawn(&apos;start  &quot;markdown编辑器绝对路径.exe&quot; &apos; + path)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// Hexo 3 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(data)&#123;</span><br><span class="line">  spawn(&apos;start  &quot;markdown编辑器绝对路径.exe&quot; &apos; + data.path)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>如果你是 Mac 平台用户，则将下列内容写入你的脚本：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var exec = require(&apos;child_process&apos;).exec</span><br><span class="line"></span><br><span class="line">// Hexo 2.x 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(path)&#123;</span><br><span class="line">    exec(&apos;open -a &quot;markdown编辑器绝对路径.app&quot; &apos; + path)</span><br><span class="line">&#125;)</span><br><span class="line">// Hexo 3 用户复制这段</span><br><span class="line">hexo.on(&apos;new&apos;, function(data)&#123;</span><br><span class="line">    exec(&apos;open -a &quot;markdown编辑器绝对路径.app&quot; &apos; + data.path)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>保存并退出脚本之后，在命令行中键入：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new &quot;auto open editor test&quot;</span><br></pre></td></tr></table></figure></p>
+<p>就可以顺利的自动打开自动生成的md文件啦~</p>
 ]]></content>
       <categories>
         <category>Hexo</category>
