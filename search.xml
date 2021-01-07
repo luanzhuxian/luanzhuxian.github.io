@@ -1,6 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>移动端适配方案</title>
+    <url>/post/783ce8a9.html</url>
+    <content><![CDATA[<p>另一篇文章：<a href="https://www.luanzhuxian.com/post/fd25c770.html">移动端像素与Viewport</a>  </p>
+<h1 id="移动端适配的问题"><a href="#移动端适配的问题" class="headerlink" title="移动端适配的问题"></a>移动端适配的问题</h1><p>通常在PC端<code>1个设备独立像素 = 1个设备像素</code>，不用考虑兼容的问题。但在移动端，不同厂商不同型号的设备的<code>PPI</code>和<code>DPR</code>是不同的。所以同样的设计图在不同设备上展示效果是不尽相同的，分辨率越高，图像越缩小。假如设备的<code>DPR</code>为2，则设计图上的<code>1px</code>在设备上其实应该是4个像素点，则设计图的1像素实际是屏幕的2像素，如果不经过转化放大，那么设计图上的元素在设备上会被缩小1/2。所以我们要找到适用于各种设备的转换方法，使设计图在各个设备上看起来都一样。 </p>
+<h1 id="几个概念"><a href="#几个概念" class="headerlink" title="几个概念"></a>几个概念</h1><p>下面几个都是<code>css</code>单位，就像<code>px</code>一样，只不过他们都是相对单位。  </p>
+<h2 id="em"><a href="#em" class="headerlink" title="em"></a>em</h2><p>作为<code>font-size</code>的单位时，相对于父元素的字体大小单位；作为其他属性单位时，代表自身字体大小。</p>
+<h2 id="rem"><a href="#rem" class="headerlink" title="rem"></a>rem</h2><p>作用于非根元素时，相对于根元素的字体大小单位；作用于根元素字体大小时，相对于其初始字体大小。</p>
+<h2 id="vm-vh"><a href="#vm-vh" class="headerlink" title="vm/vh"></a>vm/vh</h2><p><code>vw</code>视口宽度的 1/100；<code>vh</code>视口高度的 1/100。</p>
+<h1 id="rem-布局原理"><a href="#rem-布局原理" class="headerlink" title="rem 布局原理"></a>rem 布局原理</h1><p>根据屏幕宽度设置<code>html</code>标签的<code>font-size</code>。再在布局时使用<code>rem</code>单位来布局，就可以达到自适应的目的。  </p>
+<h2 id="网易的方案"><a href="#网易的方案" class="headerlink" title="网易的方案"></a>网易的方案</h2><p>如果设计稿的宽度是640px，根元素的<code>font-size</code>是100px相当于1rem，那么一个占满屏幕的元素的宽度就是6.4rem，6.4rem就是css样式该元素的宽度值。那如果现在要适配iPhone5，iPhone5的设备像素屏幕宽度为320px，如果想让6.4rem的元素以同样比例占满屏幕，则根元素的<code>font-size</code>是多少？<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">6.4rem = 320px</span><br><span class="line">1rem = 320 / 6.4 = 50px</span><br></pre></td></tr></table></figure></p>
+<p>就是要把根元素的<code>font-size</code>设为50px。那如果现在要适配iPhone6？<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">6.4rem = 375px</span><br><span class="line">1rem = 375 / 6.4 = 58.59375px</span><br></pre></td></tr></table></figure></p>
+<p>同理其他设备，只要通过<code>deviceWidth / 6.4</code>计算出根元素的<code>font-size</code>就可以了。  </p>
+<p>1、首先通过<code>meta</code>标签设置视口：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;meta name=&quot;viewport&quot; content=&quot;initial-scale=1,maximum-scale=1, minimum-scale=1&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>2、算出设计图相对100px的比例。因为假设设计稿根元素<code>font-size</code>是100，拿设计稿横向分辨率除以100得到body元素的宽度：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">750 / 100 = 7.5rem // 设计稿横向分辨率为750</span><br><span class="line">640 / 100 = 6.4rem // 设计稿横向分辨率为640</span><br></pre></td></tr></table></figure></p>
+<p>3、在<code>dom ready</code>后，动态设置根元素的<code>font-size</code>：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + &apos;px&apos; // 设计稿横向分辨率为750</span><br></pre></td></tr></table></figure></p>
+<p>同理如果设计稿是640就除以6.4。<br>4、在写<code>css</code>时转换为<code>rem</code>，设计稿上元素尺寸是多少，除以个100就行了，这也是为什么取100作为参照，就是为了写样式时转换<code>rem</code>方便。<br>也就是：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">转换系数 = 设计图宽度 / 100</span><br><span class="line">根元素font-size = deviceWide(设备宽度) / 转换系数</span><br><span class="line">css元素尺寸 = 设计稿尺寸px / 100</span><br></pre></td></tr></table></figure></p>
+<h2 id="淘宝的-flexible-方案"><a href="#淘宝的-flexible-方案" class="headerlink" title="淘宝的 flexible 方案"></a>淘宝的 flexible 方案</h2><p><code>flexible</code>方案是阿里早期开源的一个移动端适配解决方案，引用<code>flexible</code>后，我们在页面上统一使用<code>rem</code>来布局。<br>它的核心代码非常简单：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// set 1rem = viewWidth / 10</span><br><span class="line">function setRemUnit () &#123;</span><br><span class="line">    var rem = document.documentElement.clientWidth / 10</span><br><span class="line">    document.documentElement.style.fontSize = rem + &apos;px&apos;</span><br><span class="line">&#125;</span><br><span class="line">setRemUnit()</span><br></pre></td></tr></table></figure></p>
+<p>淘宝的做法是将<code>html</code>节点的<code>font-size</code>设置为页面<code>clientWidth</code>(布局视口)的1/10，即<code>1rem</code>就等于页面布局视口的1/10，这就意味着我们后面使用的<code>rem</code>都是按照页面比例来计算的。也就是<code>根元素 font-size = deviceWidth / 10</code>，如果是750的设计稿，根元素的<code>font-size</code>是75px，那么设计稿上一个宽度375px的<code>div</code>就是5rem，占设计稿的50%。若要适配宽度为375的设备，根元素的<code>font-size</code>是37.5px，5rem就是187.5px，仍然占设备宽的50%。   </p>
+<p>1、动态设置<code>viewport</code>的<code>scale</code>，控制页面的渲染比例：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var scale = 1 / devicePixelRatio</span><br><span class="line">document.querySelector(&apos;meta[name=&quot;viewport&quot;]&apos;).setAttribute(&apos;content&apos;,&apos;initial-scale=&apos; + scale + &apos;, maximum-scale=&apos; + scale + &apos;, minimum-scale=&apos; + scale + &apos;, user-scalable=no&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>虽然设备宽度是一定的，但是希望展示设计稿的宽度。比如750px的设计稿需要适配375px、dpr为2的iPhone6，就需要通过<code>scale = 1 / 2</code>改变视口宽度为<code>375px * dpr = 750px</code>。相当于原来375px的元素现在能代表750px的元素。相当于我们把750px的页面放到了750px的设备(通过改变<code>scale</code>值模拟出来的视口)中打开，然后透过375px的设备(当前打开页面的设备)去观看(注意：这里是观看，不是渲染。) 页面。<br>2、动态设置根元素的<code>font-size</code>：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">document.documentElement.style.fontSize = document.documentElement.clientWidth / 10 + &apos;px&apos;</span><br></pre></td></tr></table></figure></p>
+<p>3、在写<code>css</code>时转换为<code>rem</code>：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">各元素的css尺寸 = 设计稿标注尺寸 / 根元素font-size = 设计稿标注尺寸 / 设计稿横向分辨率 / 10</span><br></pre></td></tr></table></figure></p>
+<p>也就是：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">html = vp(视口宽度) / 10 = deviceWide(设备宽度) * dpr / 10</span><br><span class="line">css元素尺寸 = 设计稿尺寸px / 根元素font-size</span><br></pre></td></tr></table></figure></p>
+<h2 id="对比网易淘宝的方案"><a href="#对比网易淘宝的方案" class="headerlink" title="对比网易淘宝的方案"></a>对比网易淘宝的方案</h2><p>网易是以100px作为参照，任何设计图上元素的尺寸转为<code>rem</code>都是相对于100px做转换的。不同设备的根元素的<code>font-size</code>都需要根据设计图的尺寸做比例转换。转换后我们写的以<code>rem</code>为单位的样式就能还原出设计图的样子。<br>淘宝的做法就是任何设备宽都是10rem，根元素的<code>font-size</code>都是<code>设备宽 / 10</code>，任何元素的尺寸转为<code>rem</code>后其实是保留了相对于设备宽的比例，这个比例拿到其他设备上就能还原出设计图的样子。<br>网易不用管<code>dpr</code>，只需知道设计稿宽度。<br>网易的做法，<code>rem</code>值很好计算，淘宝的做法肯定得用计算器才能用好了 。不过要是你使用了<code>less</code>和<code>sass</code>这样的<code>css</code>处理器，就好办多了。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">less</span><br><span class="line"></span><br><span class="line">// 定义一个变量和一个 mixin</span><br><span class="line">@baseFontSize: 75;  // 基于视觉稿横屏尺寸 / 100 得出的基准font-size</span><br><span class="line">.px2rem (@name, @px) &#123;</span><br><span class="line">    @&#123;name&#125;: @px / @baseFontSize * 1rem;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 使用示例：</span><br><span class="line">.container &#123;</span><br><span class="line">    .px2rem(width, 320);</span><br><span class="line">&#125;</span><br><span class="line">// 编译后：</span><br><span class="line">.container &#123;</span><br><span class="line">    width: 4.26rem;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sass</span><br><span class="line"></span><br><span class="line">@function px2rem ($px) &#123;</span><br><span class="line">    $baseFontSize: 75;</span><br><span class="line">    @return ($px / $baseFontSize) + rem;</span><br><span class="line">&#125;</span><br><span class="line">.container &#123;</span><br><span class="line">    width: px2rem(320);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="vw、vh-方案"><a href="#vw、vh-方案" class="headerlink" title="vw、vh 方案"></a>vw、vh 方案</h1><p>由于<code>viewport</code>单位得到众多浏览器的兼容，上面方案现在已经被官方弃用。现在最流行的是<code>vw</code>、<code>vh</code>方案。 </p>
+<h2 id="vw、vh"><a href="#vw、vh" class="headerlink" title="vw、vh"></a>vw、vh</h2><p><code>vw</code>、<code>vh</code>方案即将视觉视口宽度<code>window.innerWidth</code>和视觉视口高度<code>window.innerHeight</code> 等分为100份。<br>上面的<code>flexible</code>方案就是模仿这种方案，因为早些时候<code>vw</code>还没有得到很好的兼容。  </p>
+<ul>
+<li>vw(Viewport’s width)：<code>1vw</code>等于视觉视口的1%。</li>
+<li>vh(Viewport’s height)：<code>1vh</code>为视觉视口高度的1%。</li>
+<li>vmin：<code>vw</code>和<code>vh</code>中的较小值。</li>
+<li>vmax：选取<code>vw</code>和<code>vh</code>中的较大值。</li>
+</ul>
+<p>如果视觉视口为<code>375px</code>，那么<code>1vw = 3.75px</code>，这时<code>UI</code>给定一个元素的宽为<code>75px</code>（设备独立像素），我们只需要将它设置为<code>75 / 3.75 = 20vw</code>。<br>这里的比例关系我们也不用自己换算，我们可以使用<code>PostCSS</code>的<code>postcss-px-to-viewport</code>插件帮我们完成这个过程。只需要在配置时指定设计图宽度就可以了，写代码时，我们只需要根据<code>UI</code>给的设计图写<code>px</code>单位即可。<br>当然，没有一种方案是十全十美的，<code>vw</code>同样有一定的缺陷：</p>
+<ul>
+<li><code>px</code>转换成<code>vw</code>不一定能完全整除，因此有一定的像素差。</li>
+<li>当容器使用<code>vw</code>，<code>margin</code>采用<code>px</code>时，很容易造成整体宽度超过<code>100vw</code>，从而影响布局效果。当然我们也是可以避免的，例如使用<code>padding</code>代替<code>margin</code>，结合<code>calc()</code>函数使用等等…</li>
+</ul>
+<h2 id="postcss-px-to-viewport"><a href="#postcss-px-to-viewport" class="headerlink" title="postcss-px-to-viewport"></a>postcss-px-to-viewport</h2><p>首先安装<code>postcss-px-to-viewport</code>插件。该插件主要用来把<code>px</code>单位自动转换为<code>vw</code>、<code>vh</code>、<code>vmin</code>、<code>vmax</code>这样的<code>viewport</code>视窗单位，也是<code>vw</code>适配方案的核心插件之一。  </p>
+<p>可以在<code>.postcssrc.js</code>文件中对<code>postcss</code>插件进行配置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    ‘plugins‘: &#123;</span><br><span class="line">        ‘postcss-px-to-viewport‘: &#123;</span><br><span class="line">            viewportWidth: 750,</span><br><span class="line">            unitPrecision: 6,</span><br><span class="line">            minPixelValue: 1,</span><br><span class="line">            viewportUnit: &apos;vw&apos;,</span><br><span class="line">            mediaQuery: true,</span><br><span class="line">            selectorBlackList: [&apos;html&apos;, &apos;body&apos;],</span><br><span class="line">            exclude: /node_modules/</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果用的是<code>vue-cli</code>的话，也可以在<code>vue.config.js</code>文件中进行配置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    css: &#123;</span><br><span class="line">        loaderOptions: &#123;</span><br><span class="line">            postcss: &#123;</span><br><span class="line">                plugins: loader =&gt; [</span><br><span class="line">                    require(&apos;postcss-px-to-viewport&apos;)(&#123;</span><br><span class="line">                        viewportWidth: 750,</span><br><span class="line">                        unitPrecision: 6,</span><br><span class="line">                        minPixelValue: 1,</span><br><span class="line">                        viewportUnit: &apos;vw&apos;,</span><br><span class="line">                        mediaQuery: true,</span><br><span class="line">                        selectorBlackList: [&apos;html&apos;, &apos;body&apos;],</span><br><span class="line">                        exclude: /node_modules/</span><br><span class="line">                    &#125;)</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中相关的几个关键参数：</p>
+<ul>
+<li>viewportWidth：The width of the viewport. 视窗的宽度，对应的是我们设计稿的宽度，一般是750。</li>
+<li>viewportHeight：The height of the viewport. 视窗的高度，根据750设备的宽度来指定，一般指定1334，也可以不配置。</li>
+<li>unitPrecision：The decimal numbers to allow the REM - units to grow to. 指定<code>px</code>转换为视窗单位值的小数位数。</li>
+<li>viewportUnit：Expected units. 指定需要转换成的视窗单位，建议使用<code>vw</code>。</li>
+<li>selectorBlackList：The selectors to - ignore and leave as px. 指定不转换为视窗单位的选择器（如标签、类），可以自定义，可以无限添加，建议定义一至两个通用的类名。</li>
+<li>minPixelValue：Set the minimum pixel value to replace. 小于或等于<code>1px</code>不转换为视窗单位，你也可以设置为你想要的值。</li>
+<li>mediaQuery：Allow px to be converted in media - queries. 允许在媒体查询中转换<code>px</code>。</li>
+</ul>
+<p>我们使用<code>750px</code>宽度的设计稿，那么<code>100vw = 750px</code>，即<code>1vw = 7.5px</code>。那么在实际撸码过程，不需要进行任何的计算，直接按照设计图中的标注写<code>px</code>的值就行，打包后会转换成对应的<code>vw</code>值，因为<code>vw</code>可以代表比例，所以可以适配各种不同的设备。  </p>
+<h1 id="1像素问题"><a href="#1像素问题" class="headerlink" title="1像素问题"></a>1像素问题</h1><p>为了适配各种屏幕，我们写代码时一般使用设备独立像素来对页面进行布局。而在设备像素比大于1的屏幕上，我们写的<code>1px</code>实际上是被多个物理像素渲染，这就会出现<code>1px</code>在有些屏幕上看起来很粗的现象。  </p>
+<h2 id="border-image"><a href="#border-image" class="headerlink" title="border-image"></a>border-image</h2><p>准备一张符合条件的边框背景图作为<code>border-image</code>。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    .border_1px &#123;</span><br><span class="line">        border-bottom: 1px solid #000;</span><br><span class="line">    &#125;</span><br><span class="line">    // 媒体查询，当设备的dpr是2的时候，用border-image覆盖上面的border样式</span><br><span class="line">    @media only screen and (-webkit-min-device-pixel-ratio:2) &#123;</span><br><span class="line">        .border_1px &#123;</span><br><span class="line">            border-bottom: none;</span><br><span class="line">            border-width: 0 0 1px 0;</span><br><span class="line">            border-image: url(1pxline.png) 0 0 2 0 stretch;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">## background-image</span><br><span class="line">和`border-image`类似，用边框背景图，模拟在背景上。</span><br></pre></td></tr></table></figure></p>
+<pre><code>.border_1px {
+    border-bottom: 1px solid #000;
+}
+@media only screen and (-webkit-min-device-pixel-ratio:2) {
+    .border_1px {
+        background: url(1pxline.png) repeat-x left bottom;
+        background-size: 100% 1px;
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">上面两种都需要单独准备图片，而且圆角不是很好处理，但是可以应对大部分场景。</span><br><span class="line"></span><br><span class="line">## 伪类 + transform</span><br><span class="line">基于媒体查询，判断不同的设备像素比对线条进行缩放：</span><br></pre></td></tr></table></figure>
+<pre><code>.border_1px:before {
+    content: &apos;&apos;;
+    position: absolute;
+    top: 0;
+    height: 1px;
+    width: 100%;
+    background-color: #000;
+    transform-origin: 50% 0%;
+}
+@media only screen and (-webkit-min-device-pixel-ratio:2) {
+    .border_1px:before {
+        transform: scaleY(0.5);
+    }
+}
+@media only screen and (-webkit-min-device-pixel-ratio:3) {
+    .border_1px:before {
+        transform: scaleY(0.33);
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">## postcss-write-svg</span><br><span class="line">上面`border-image`和`background-image`方案都可以模拟`1px`边框，但是使用的都是位图，还需要外部引入。  </span><br><span class="line">借助`PostCSS`的`postcss-write-svg`我们能直接使用`border-image`和`background-image`创建`svg`的`1px`边框。 </span><br><span class="line">比如使用`border-image`：</span><br></pre></td></tr></table></figure>
+<pre><code>@svg 1px-border {
+    height: 2px;
+    @rect {
+        fill: var(--color, black);
+        width: 100%;
+        height: 50%;
+    }
+}
+.example {
+    border: 1px solid transparent;
+    border-image: svg(1px-border param(--color #00b1ff)) 2 2 stretch;
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">编译出来的css：</span><br></pre></td></tr></table></figure>
+<pre><code>.example {
+    border: 1px solid transparent;
+    border-image: url(&quot;data:image/svg+xml;charset=utf-8,%3Csvg xmlns=&apos;http://www.w3.org/2000/svg&apos; height=&apos;2px&apos;%3E%3Crect fill=&apos;%2300b1ff&apos; width=&apos;100%25&apos; height=&apos;50%25&apos;/%3E%3C/svg%3E&quot;) 2 2 stretch;
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">使用`background-image`：</span><br></pre></td></tr></table></figure>
+<pre><code>@svg square {
+    @rect {
+        fill: var(--color, black);
+        width: 100%;
+        height: 100%;
+    }
+}
+#example {
+    background: white svg(square param(--color #00b1ff));
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">编译出来就是：</span><br></pre></td></tr></table></figure>
+<pre><code>#example {
+    background: white url(&quot;data:image/svg+xml;charset=utf-8,%3Csvg xmlns=&apos;http://www.w3.org/2000/svg&apos;%3E%3Crect fill=&apos;%2300b1ff&apos; width=&apos;100%25&apos; height=&apos;100%25&apos;/%3E%3C/svg%3E&quot;);
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">## 设置viewport</span><br><span class="line">通过设置缩放，让`CSS`像素等于真正的物理像素。例如：当设备像素比为3时，我们将页面缩放1/3倍，这时`1px`等于一个真正的屏幕像素。</span><br></pre></td></tr></table></figure>
+<pre><code>const scale = 1 / window.devicePixelRatio
+const viewport = document.querySelector(&apos;meta[name=&quot;viewport&quot;]&apos;)
+if (!viewport) {
+    viewport = document.createElement(&apos;meta&apos;)
+    viewport.setAttribute(&apos;name&apos;, &apos;viewport&apos;)
+    window.document.head.appendChild(viewport)
+}
+viewport.setAttribute(&apos;content&apos;, &apos;width=device-width,user-scalable=no,initial-scale=&apos; + scale + &apos;,maximum-scale=&apos; + scale + &apos;,minimum-scale=&apos; + scale)
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">或动态插入：</span><br></pre></td></tr></table></figure>
+<pre><code>var devicePixelRatio = window.devicePixelRatio
+var initialScale = 1 / devicePixelRatio
+var maximumScale = 1 / devicePixelRatio
+var minimumScale = 1 / devicePixelRatio
+var meta = document.createElement(&apos;meta&apos;)
+meta.name = &apos;viewport&apos;
+meta.content = &apos;width=device-width,initial-scale=&apos; + initialScale + &apos;,maximum-scale=&apos; + maximumScale + &apos;,minimum-scale=&apos; + minimumScale + &apos;,user-scalable=no&apos;
+document.head.appendChild(meta)
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">这意味着你页面上所有的布局都要按照物理像素来写。而不同设备物理像素不一样，这显然是不现实的，我们可以借助`flexible`或`vw`、`vh`来帮助我们进行适配。  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 横屏适配</span><br><span class="line">很多视口我们要对横屏和竖屏显示不同的布局，所以我们需要检测在不同的场景下给定不同的样式。</span><br><span class="line"></span><br><span class="line">## JavaScript 检测横屏</span><br><span class="line">`window.orientation`获取屏幕旋转方向。</span><br></pre></td></tr></table></figure>
+<pre><code>window.addEventListener(&apos;resize&apos;, () =&gt; {
+    if (window.orientation === 180 || window.orientation === 0) { 
+        // 正常方向或屏幕旋转180度
+        console.log(&apos;竖屏&apos;)
+    }
+    if (window.orientation === 90 || window.orientation === -90 ){ 
+        // 屏幕顺时钟旋转90度或屏幕逆时针旋转90度
+        console.log(&apos;横屏&apos;)
+    }  
+})
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">## CSS 检测横屏</span><br></pre></td></tr></table></figure>
+<pre><code>@media screen and (orientation: portrait) {
+    /*竖屏...*/
+} 
+@media screen and (orientation: landscape) {
+    /*横屏...*/
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"># 适配 iPhoneX</span><br><span class="line">适配`iPhoneX`，有了安全区域这个概念：安全区域就是一个不属于上面三个`viewport`范围。为了保证页面的显示效果，我们必须把页面限制在安全范围内，但是不影响整体效果。  </span><br><span class="line"></span><br><span class="line">## viewport-fit</span><br><span class="line">`viewport-fit`是专门为了适配`iPhoneX`而诞生的一个属性，它用于限制网页如何在安全区域内进行展示。  </span><br><span class="line">- contain: 可视窗口完全包含网页内容</span><br><span class="line">- cover：网页内容完全覆盖可视窗口</span><br><span class="line"></span><br><span class="line">默认情况下或者设置为`auto`和`contain`效果相同。  </span><br><span class="line"></span><br><span class="line">## env、constant</span><br><span class="line">我们需要将顶部和底部合理的摆放在安全区域内，`iOS11`新增了两个`CSS`函数`env`、`constant`，用于设定安全区域与边界的距离。  </span><br><span class="line">函数内部可以是四个常量：</span><br><span class="line">- safe-area-inset-left：安全区域距离左边边界距离；</span><br><span class="line">- safe-area-inset-right：安全区域距离右边边界距离；</span><br><span class="line">- safe-area-inset-top：安全区域距离顶部边界距离；</span><br><span class="line">- safe-area-inset-bottom：安全区域距离底部边界距离；</span><br><span class="line"></span><br><span class="line">注意：我们必须指定`viweport-fit`后才能使用这两个函数：</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;meta name=&quot;viewport&quot; content=&quot;viewport-fit=cover&quot;&gt;
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">`constant`在`iOS &lt; 11.2`的版本中生效，`env`在`iOS &gt;= 11.2`的版本中生效，这意味着我们往往要同时设置他们，将页面限制在安全区域内：</span><br></pre></td></tr></table></figure>
+<pre><code>body {
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">当使用底部固定导航栏时，我们要为他们设置`padding`值：</span><br></pre></td></tr></table></figure>
+<pre><code>{
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+</code></pre><p><code>`</code></p>
+]]></content>
+      <categories>
+        <category>移动端开发</category>
+      </categories>
+      <tags>
+        <tag>移动端开发</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>移动端像素与Viewport</title>
+    <url>/post/fd25c770.html</url>
+    <content><![CDATA[<h1 id="CSS像素、设备像素、设备独立像素"><a href="#CSS像素、设备像素、设备独立像素" class="headerlink" title="CSS像素、设备像素、设备独立像素"></a>CSS像素、设备像素、设备独立像素</h1><h2 id="CSS像素（CSS-Pixel）"><a href="#CSS像素（CSS-Pixel）" class="headerlink" title="CSS像素（CSS Pixel）"></a>CSS像素（CSS Pixel）</h2><p>虚拟像素，<code>css</code>和<code>js</code>使用的抽象单位，是图像显示的基本单元，既不是一个确定的物理量，也不是一个点或者小方块，而是一个抽象概念。</p>
+<h2 id="设备像素（Device-Pixel）"><a href="#设备像素（Device-Pixel）" class="headerlink" title="设备像素（Device Pixel）"></a>设备像素（Device Pixel）</h2><p>也称为物理像素，设备能控制显示的最小单位，显示屏是由一个个物理像素点组成的，通过控制每个像素点的颜色，使屏幕显示出不同的图像。</p>
+<h2 id="设备独立像素（Device-Independent-Pixel）"><a href="#设备独立像素（Device-Independent-Pixel）" class="headerlink" title="设备独立像素（Device Independent Pixel）"></a>设备独立像素（Device Independent Pixel）</h2><p>也称为逻辑像素，简称<code>DIP</code>。与设备无关的逻辑像素，代表可以通过程序控制使用的虚拟像素，是一个总体概念，包括了<code>css</code>像素。可以理解为：<code>CSS像素 = 设备独立像素 = 逻辑像素</code>。在<code>iOS</code>、<code>Android</code>和<code>React Native</code>开发中样式单位其实都使用的是设备独立像素。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">页面的缩放系数 = CSS像素 / 设备独立像素</span><br></pre></td></tr></table></figure></p>
+<h2 id="DPR（device-pixels-ratio）"><a href="#DPR（device-pixels-ratio）" class="headerlink" title="DPR（device pixels ratio）"></a>DPR（device pixels ratio）</h2><p>设备物理像素和设备独立像素的比例。计算公式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">devicePixelRatio = 物理像素 / 设备独立像素</span><br></pre></td></tr></table></figure></p>
+<p>可以通过<code>window.devicePixelRatio</code>获得。所以通过<code>devicePixelRatio</code>，我们可以知道该设备上一个css像素占用多少个物理像素。例如iPhone6的<code>dpr</code>的值为2，也就是说1个css像素相当于2个物理像素，代表在该设备上，1个css像素是由2x2个设备像素绘制成的。iPhoneX的<code>dpr</code>的值为3，也就是说1个css像素相当于3个物理像素。如下图所示：<br><img src="/images/blog/mobile-compatiable/dpr.png" alt="DPR"></p>
+<h2 id="PPI（pixel-per-inch）"><a href="#PPI（pixel-per-inch）" class="headerlink" title="PPI（pixel per inch）"></a>PPI（pixel per inch）</h2><p>每英寸所包含的像素点数，更确切的说法应该是像素密度，也就是衡量单位物理面积内拥有像素值的情况。数值越高，说明屏幕能以更高密度显示图像，屏幕越清晰。 计算公式：<br><img src="/images/blog/mobile-compatiable/ppi.png" alt="PPI"><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">比如iPhone 6，分辨率1920 * 1080，主对角线尺寸5.5</span><br><span class="line">斜边尺寸 = V(1920^2+1080^2) // V代表开根号 </span><br><span class="line">ppi = 斜边尺寸/5.5</span><br></pre></td></tr></table></figure></p>
+<p>一般来说<code>dpr = ppi / 160</code>，<code>ppi</code>在120-160之间的手机被归为低密度手机，160-240被归为中密度，240-320被归为高密度，320以上被归为超高密度（例如苹果公司的<code>Retina</code>显示屏）。  </p>
+<h1 id="视口（Viewport）"><a href="#视口（Viewport）" class="headerlink" title="视口（Viewport）"></a>视口（Viewport）</h1><p>视口代表当前可见的计算机图形区域。在<code>Web</code>浏览器术语中，通常与浏览器窗口相同，但不包括浏览器的<code>UI</code>， 菜单栏等——即指你正在浏览的文档的那一部分。  </p>
+<h2 id="viewport-的种类"><a href="#viewport-的种类" class="headerlink" title="viewport 的种类"></a>viewport 的种类</h2><p>一般我们把<code>viewport</code>分为三类：</p>
+<h3 id="布局视口（layout-viewport）"><a href="#布局视口（layout-viewport）" class="headerlink" title="布局视口（layout viewport）"></a>布局视口（layout viewport）</h3><p>浏览器默认的<code>viewport</code>，可以通过<code>document.documentElement.clientWidth</code>来获取。<br>布局视口是网页布局的基准窗口，在<code>PC</code>浏览器上，布局视口就等于当前浏览器的窗口大小（不包括<code>borders</code>、<code>margins</code>、滚动条）。<br>在移动端，宽度通常大于浏览器可视区域的宽度。因为如果把移动设备上浏览器的可视区域设为<code>viewport</code>的话，一些网站就会因为<code>viewport</code>太窄而显示错乱，所以浏览器厂商就决定把默认的<code>viewport</code>设为一个较宽的值，比如<code>980px</code>，这样的话即使是那些为桌面设计的网站也能在移动浏览器上正常显示了。  </p>
+<h3 id="视觉视口（visual-viewport）"><a href="#视觉视口（visual-viewport）" class="headerlink" title="视觉视口（visual viewport）"></a>视觉视口（visual viewport）</h3><p>用户通过屏幕真实看到的区域，默认等于浏览器窗口的大小（包括滚动条宽度）。可以通过<code>window.innerWidth</code>来获取，宽度等于浏览器可视区域的宽度。当用户对浏览器进行缩放时，不会改变布局视口的大小，所以页面布局是不变的，但是缩放会改变视觉视口的大小。<br>例如：用户将浏览器窗口放大了200%，这时浏览器窗口中的<code>CSS</code>像素会随着视觉视口的放大而放大，这时一个<code>CSS</code>像素会跨越更多的物理像素。<br>所以，布局视口会限制你的<code>CSS</code>布局而视觉视口决定用户具体能看到什么。  </p>
+<h3 id="理想视口（ideal-viewport）"><a href="#理想视口（ideal-viewport）" class="headerlink" title="理想视口（ideal viewport）"></a>理想视口（ideal viewport）</h3><p>移动设备的理想<code>viewport</code>，即网站页面在移动端展示的理想大小。可以通过调用<code>screen.width / height</code>来获取理想视口大小。没有一个固定的尺寸，不同的设备有不同<code>ideal viewport</code>。<br>如下图，在浏览器调试移动端时页面上给定的像素大小就是理想视口大小，它的单位正是设备独立像素。<br><img src="/images/blog/mobile-compatiable/ideal-viewport.png" alt="ideal viewport"><br>上面在介绍<code>CSS</code>像素时曾经提到<code>页面的缩放系数 = CSS像素 / 设备独立像素</code>，实际说<code>页面的缩放系数 = 理想视口宽度 / 视觉视口宽度</code>更为准确。<br>所以，当页面缩放比例为100%时，<code>ideal viewport</code>的宽度等于移动设备的屏幕宽度，<code>CSS像素 = 设备独立像素</code>，<code>理想视口 = 视觉视口</code>。<br><code>ideal viewport</code>的意义在于，无论在何种分辨率的屏幕下，那些针对<code>ideal viewport</code>而设计的网站，不需要用户手动缩放，也不需要出现横向滚动条，都可以完美的呈现给用户。</p>
+<h2 id="利用-meta-标签对-viewport-进行控制"><a href="#利用-meta-标签对-viewport-进行控制" class="headerlink" title="利用 meta 标签对 viewport 进行控制"></a>利用 meta 标签对 viewport 进行控制</h2><p>移动设备默认的<code>viewport</code>是<code>layout viewport</code>，也就是那个比屏幕要宽的<code>viewport</code>，但在进行移动设备网站的开发时，我们需要的是<code>ideal viewport</code>。那么怎么才能得到<code>ideal viewport</code>呢？这就该轮到<code>meta</code>标签出场了。<br><code>meta</code>元素表示那些不能由其它<code>HTML</code>元相关元素之一表示的任何元数据信息，它可以告诉浏览器如何解析页面。我们可以借助<code>meta</code>元素的<code>viewport</code>来帮助我们设置视口、缩放等，从而让移动端得到更好的展示效果。<br>我们在开发移动设备的网站时，最常见的的一个动作就是把下面这个东西复制到我们的<code>head</code>标签中：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>作用是让当前<code>viewport</code>的宽度等于设备的宽度，同时不允许用户手动缩放。如果你不这样的设定的话，那就会使用那个比屏幕宽的默认<code>layout viewport</code>，就会出现横向滚动条。<br>上面是<code>viewport</code>配置的具体含义：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>可能值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>width</td>
+<td>正整数或device-width</td>
+<td>以pixels（像素）为单位， 定义布局视口的宽度。</td>
+</tr>
+<tr>
+<td>height</td>
+<td>正整数或device-height</td>
+<td>以pixels（像素）为单位， 定义布局视口的高度。</td>
+</tr>
+<tr>
+<td>initial-scale</td>
+<td>0.0 - 10.0</td>
+<td>定义页面初始缩放比率。</td>
+</tr>
+<tr>
+<td>minimum-scale</td>
+<td>0.0 - 10.0</td>
+<td>定义缩放的最小值；必须小于或等于maximum-scale的值。</td>
+</tr>
+<tr>
+<td>maximum-scale</td>
+<td>0.0 - 10.0</td>
+<td>定义缩放的最大值；必须大于或等于minimum-scale的值。</td>
+</tr>
+<tr>
+<td>user-scalable</td>
+<td>布尔值（yes或者no）</td>
+<td>如果设置为 no，用户将不能放大或缩小网页。默认值为 yes。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="把当前的-viewport-宽度设置为-ideal-viewport-的宽度"><a href="#把当前的-viewport-宽度设置为-ideal-viewport-的宽度" class="headerlink" title="把当前的 viewport 宽度设置为 ideal viewport 的宽度"></a>把当前的 viewport 宽度设置为 ideal viewport 的宽度</h2><p>为了在移动端让页面获得更好的显示效果，我们必须让布局视口、视觉视口都尽可能等于理想视口。<br>要得到<code>ideal viewport</code>就必须把默认的<code>layout viewport</code>的宽度设为移动设备的屏幕宽度。因为<code>meta viewport</code>中的<code>width</code>能控制<code>layout viewport</code>的宽度，<code>device-width</code>就等于理想视口的宽度，所以设置<code>width=device-width</code>就相当于让布局视口等于理想视口。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;</span><br><span class="line"></span><br><span class="line">device-width = 设备的物理分辨率 / (devicePixelRatio * scale)</span><br></pre></td></tr></table></figure></p>
+<p>通过设置<code>initial-scale</code>可以达到同样的效果：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;initial-scale=1&quot;&gt;</span><br><span class="line">```  </span><br><span class="line">由于`initial-scale = 理想视口宽度 / 视觉视口宽度`，所以我们设置`initial-scale=1;`就相当于让视觉视口等于理想视口。</span><br></pre></td></tr></table></figure></p>
+<pre><code>当前缩放值 = ideal viewport宽度 / visual viewport宽度
+</code></pre><p><code>`</code><br>缩放值越大，元素越大，当前<code>viewport</code>的宽度就会越小，视口能看到的东西越少，反之亦然。</p>
+<p>最后，总结一下，要把当前的<code>viewport</code>宽度设为<code>ideal viewport</code>的宽度，既可以设置<code>width=device-width</code>，也可以设置<code>initial-scale=1</code>。但这两者各有一个小缺陷，就是iPhone、iPad以及IE会横竖屏不分，通通以竖屏的<code>ideal viewport</code>宽度为准。所以，最完美的写法应该是，两者都写上去，这样就<code>initial-scale=1</code>解决了iPhone、iPad的毛病，<code>width=device-width</code>则解决了IE的毛病。当两个设置冲突时，布局视口取两者最大值。<br>这时，1个<code>CSS</code>像素就等于1个设备独立像素，而且我们也是基于理想视口来进行布局的，所以呈现出来的页面布局在各种设备上都能大致相似。  </p>
+<h1 id="获取浏览器窗口大小"><a href="#获取浏览器窗口大小" class="headerlink" title="获取浏览器窗口大小"></a>获取浏览器窗口大小</h1><ul>
+<li>window.innerHeight：获取浏览器视觉视口高度（包括垂直滚动条）。</li>
+<li>window.outerHeight：获取浏览器窗口外部的高度。表示整个浏览器窗口的高度，包括侧边栏、窗口镶边和调正窗口大小的边框。</li>
+<li>window.screen.Height：获取获屏幕取理想视口高度，这个数值是固定的，设备的分辨率/设备像素比</li>
+<li>window.screen.availHeight：浏览器窗口可用的高度。</li>
+<li>document.documentElement.clientHeight：获取浏览器布局视口高度，包括内边距，但不包括垂直滚动条、边框和外边距。</li>
+<li>document.documentElement.offsetHeight：包括内边距、滚动条、边框和外边距。</li>
+<li>document.documentElement.scrollHeight：在不使用滚动条的情况下适合视口中的所有内容所需的最小宽度。测量方式与clientHeight相同：它包含元素的内边距，但不包括边框，外边距或垂直滚动条。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>移动端开发</category>
+      </categories>
+      <tags>
+        <tag>移动端开发</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>vue-awesome-swiper 切换导航导致轮播停止的问题</title>
     <url>/post/6903b776.html</url>
     <content><![CDATA[<p><code>vue-awesome-swiper</code>版本<code>3.1.3</code>。且使用了<code>keep-alive</code>。    </p>
@@ -499,7 +752,15 @@
     <url>/post/64e2dbce.html</url>
     <content><![CDATA[<p>关于作用域请看另一篇文章：<a href="https://www.luanzhuxian.com/post/cd6f8c2a.html">JavaScript 的作用域</a>  </p>
 <p>上篇文章我们讲了作用域，知道<code>JavaScript</code>代码的整个执行过程，分为两个阶段，代码编译阶段与代码执行阶段。编译阶段由编译器完成，将代码翻译成可执行代码，这个阶段作用域规则会确定。执行阶段由引擎完成，主要任务是执行可执行代码，执行上下文在这个阶段创建。现在我们聊聊执行上下文。  </p>
-<h1 id="执行上下文（Execution-Context）"><a href="#执行上下文（Execution-Context）" class="headerlink" title="执行上下文（Execution Context）"></a>执行上下文（Execution Context）</h1><p>执行上下文是当前<code>JavaScript</code>代码被引擎解析和执行时所在环境的抽象概念。帮助<code>JavaScript</code>引擎管理整个解析和运行代码的复杂过程。在代码执行过程中，可能会出现多个执行上下文，但运行的执行上下文最多只有一个。为了管理执行上下文，我们引入了执行上下文栈，处于栈顶的那个元素就是运行的执行上下文。当解释器遇到函数、块语句、<code>try...catch</code>时，都会创建一个新的执行上下文后压入执行上下文栈，成为运行时执行上下文。   </p>
+<h1 id="执行上下文（Execution-Context）"><a href="#执行上下文（Execution-Context）" class="headerlink" title="执行上下文（Execution Context）"></a>执行上下文（Execution Context）</h1><p>执行上下文是当前<code>JavaScript</code>代码被引擎解析和执行时所在环境的抽象概念。帮助<code>JavaScript</code>引擎管理整个解析和运行代码的复杂过程。为我们的可执行代码块提供了执行前的必要准备工作，例如变量对象的定义、作用域链的扩展、提供调用者的对象引用等信息。<br>在代码执行过程中，可能会出现多个执行上下文，但运行的执行上下文最多只有一个。为了管理执行上下文，我们引入了执行上下文栈，处于栈顶的那个元素就是运行的执行上下文。当解释器遇到函数、块语句、<code>try...catch</code>时，都会创建一个新的执行上下文压入栈，成为当前上下文。   </p>
+<h2 id="执行上下文的生命周期"><a href="#执行上下文的生命周期" class="headerlink" title="执行上下文的生命周期"></a>执行上下文的生命周期</h2><p><strong>创建阶段</strong>  </p>
+<ul>
+<li>用当前函数的参数列表<code>arguments</code>初始化一个<code>变量对象</code>并将当前执行上下文与之关联，函数代码块中声明的变量和函数将作为属性添加到这个<code>变量对象</code>上。在这一阶段，会进行变量和函数的初始化声明，变量统一定义为<code>undefined</code>需要等到赋值时才会有确值，而函数则会直接定义。</li>
+<li>确定<code>this</code></li>
+<li>构建作用域链</li>
+</ul>
+<p><strong>执行阶段</strong><br>代码开始逐条执行，在这个阶段，引擎开始对定义的变量赋值，开始顺着作用域链访问变量，如果内部有函数调用就创建一个新的执行上下文压入执行栈并把控制权交出。  </p>
+<p><strong>销毁阶段</strong><br>函数执行完成后，当前执行上下文（局部环境）会被弹出执行上下文栈并且销毁，控制权被重新交给执行栈上一层的执行上下文。  </p>
 <h2 id="执行上下文的种类"><a href="#执行上下文的种类" class="headerlink" title="执行上下文的种类"></a>执行上下文的种类</h2><p>分为全局执行上下文和函数执行上下文：    </p>
 <ul>
 <li><strong>全局执行上下文</strong>：<code>Javascript</code>引擎首次开始解析代码时创建。只有一个。</li>
@@ -516,10 +777,11 @@
 <h1 id="环境（Environments）"><a href="#环境（Environments）" class="headerlink" title="环境（Environments）"></a>环境（Environments）</h1><p>我们看看 ECMAScript 5 中对<code>Environments</code>和<code>Execution Contexts</code>的解释：</p>
 <blockquote bgcolor="#FF4500" style="margin-bottom: 30px"><strong>Lexical environments</strong> hold variables and parameters. The currently active environment is managed via a stack of execution contexts (which grows and shrinks in sync with the call stack). Nested scopes are handled by chaining environments: each environment points to its outer environment (whose scope surrounds its scope). In order to enable lexical scoping, functions remember the scope (=environment) they were defined in. When a function is invoked, a new environment is created for it’s arguments and local variables. That environment’s outer environment is the function’s scope. </blockquote> 
 
-<p>由此可知<code>环境</code>其实就是<code>作用域</code>。在规范中<code>作用域</code>更官方的叫法是<code>词法环境</code>，<code>词法环境</code>是<code>作用域</code>的内部实现机制。<code>环境</code>外部还有<code>环境</code>，形成链条，也就是<code>作用域链</code>。当函数被调用时，会创建新的执行上下文、确定<code>this</code>指向和<code>环境</code>，引擎会在<code>环境</code>中查找参数和变量等标识符。也就是说随着执行栈的变化，随着执行函数的变化，当前的<code>环境</code>即<code>作用域</code>也是变化的，只是<code>环境</code>是函数定义时确定的，<code>this</code>是函数执行时确定的。看一个例子：  </p>
+<p>由此可知<code>环境</code>其实就是<code>作用域</code>。在规范中<code>作用域</code>更官方的叫法是<code>词法环境</code>，<code>词法环境</code>是<code>作用域</code>的内部实现机制。<code>环境</code>外部还有<code>环境</code>，形成链条，也就是<code>作用域链</code>。<br>当函数被调用时，会创建新的执行上下文，其中包含：确定<code>this</code>指向和<code>环境</code>，相当于将<code>作用域</code>和<code>上下文</code>进行关联，将标识符保存在<code>环境记录</code>中。执行时引擎会根据作用域规则，查找参数和变量等标识符，找到的话就保存在<code>环境记录</code>中。<br>随着执行栈的变化，随着执行函数的变化，当前的<code>环境</code>即<code>作用域</code>也是变化的，只是<code>环境</code>是函数定义时确定的，<code>this</code>是函数执行时确定的。看一个例子：  </p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function foo () &#123;</span><br><span class="line">    console.log(color)</span><br><span class="line">&#125;</span><br><span class="line">function bar () &#123;</span><br><span class="line">    const color = &apos;yellow&apos;</span><br><span class="line">    foo()</span><br><span class="line">&#125;</span><br><span class="line">bar()   // color is not defined</span><br></pre></td></tr></table></figure>
 <p>当<code>foo</code>执行时，创建新的上下文并入栈，<code>this</code>指向<code>window</code>，词法环境无标识符，外部环境是全局环境。引擎在当前<code>词法环境/作用域</code>找不到<code>color</code>，沿着作用域链，外部环境是<code>foo</code>定义时的外部<code>全局环境/全局作用域</code>，而不是调用时的外部<code>bar的作用域</code>，对<code>bar的作用域</code>无访问权限，所以外部也找不到，就会报错。</p>
-<h1 id="词法环境（Lexical-Environment）"><a href="#词法环境（Lexical-Environment）" class="headerlink" title="词法环境（Lexical Environment）"></a>词法环境（Lexical Environment）</h1><h2 id="词法环境的种类"><a href="#词法环境的种类" class="headerlink" title="词法环境的种类"></a>词法环境的种类</h2><p>词法环境有三种类型：</p>
+<h1 id="词法环境（Lexical-Environment）"><a href="#词法环境（Lexical-Environment）" class="headerlink" title="词法环境（Lexical Environment）"></a>词法环境（Lexical Environment）</h1><p>词法环境是一种规范类型，基于 ECMAScript 代码的词法嵌套结构来定义标识符和具体变量和函数的关联。一个词法环境由环境记录器和一个可能的引用外部词法环境的空值组成。简单来说词法环境是一种持有<code>标识符—变量映射</code>的结构。这里的<code>标识符</code>指的是变量/函数的名字，而<code>变量</code>是对实际对象或原始数据的引用。  </p>
+<h2 id="词法环境的种类"><a href="#词法环境的种类" class="headerlink" title="词法环境的种类"></a>词法环境的种类</h2><p>词法环境有三种类型：</p>
 <ul>
 <li><strong>全局环境（Global Environment）</strong>：是一个没有外部环境的词法环境，其外部环境引用为<code>null</code>。拥有一个全局对象（<code>window</code>对象）及其关联的方法和属性（例如数组方法）以及任何用户自定义的全局变量，<code>this</code>的值指向这个全局对象。</li>
 <li><strong>函数环境（Function Environment）</strong>：用户在函数中定义的变量被存储在环境记录中，包含了<code>arguments</code>对象。其外部环境可以是全局环境，也可以是包含内部函数的外部函数环境。  </li>
@@ -1610,6 +1872,36 @@
       </tags>
   </entry>
   <entry>
+    <title>Hexo + Next 添加文章阅读量统计</title>
+    <url>/post/ec069b41.html</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于 <a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a> 这家服务提供商，实现 Hexo 博客文章的浏览数统计功能。  </p>
+<p> Next 主题目前已经合并这个功能，相关代码在<code>themes\next\layout\_third-party\analytics\lean-analytics.swig</code>，可以不用修改主题模版，直接在<code>_config.yml</code>中配置即可。</p>
+<h2 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置LeanCloud</h2><p>在注册完成 LeanCloud 帐号并验证邮箱之后，我们就可以登录帐号。</p>
+<h3 id="1、创建一个开发版应用（免费）："><a href="#1、创建一个开发版应用（免费）：" class="headerlink" title="1、创建一个开发版应用（免费）："></a>1、创建一个开发版应用（免费）：</h3><p>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台点击创建应用：<br><img src="http://cdn.luanzhuxian.com/blog/leancloud.png" alt="avatar"><br>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的：<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-application.png" alt="avatar"></p>
+<h3 id="2、设置"><a href="#2、设置" class="headerlink" title="2、设置"></a>2、设置</h3><p>在<code>LeanCloud &gt; 设置 &gt; 安全中心</code>中，<code>服务开关</code>部分只开启<code>数据存储</code>。<br>因为<code>AppID</code>以及<code>AppKey</code>是暴露在外的，为了确保只用于我们自己的博客，建议开启<code>Web安全选项</code>，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。<code>Web安全域名</code>下面要添加你的 Github Page 域名，来确保数据调用的安全：<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-setting.png" alt="avatar"></p>
+<h3 id="3、创建Class"><a href="#3、创建Class" class="headerlink" title="3、创建Class"></a>3、创建Class</h3><p>在应用的数据配置界面，左侧数据栏下，下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。<br>点击顶部的加号图标<code>新建Class</code>。在弹出的选项中选择<code>创建Class</code>用来专门保存我们博客的文章访问量等数据:<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-class.png" alt="avatar"><br><strong>注意：</strong></p>
+<ul>
+<li><strong>为了保证我们前面对 NexT 主题的修改兼容，此处的<font color="red">Class名称必须为Counter</font>。</strong></li>
+<li><strong>由于 LeanCloud 升级了默认的 ACL 权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择无限制。</strong>  </li>
+</ul>
+<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击最左侧菜单栏的设置。<br>在设置界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>App ID</code>以及<code>App Key</code>，有了它，我们就有权限能够通过主题中配置好的 Javascript 代码与这个应用的<code>Counter表</code>进行数据存取操作了:<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-key.png" alt="avatar"></p>
+<h3 id="4、修改next配置"><a href="#4、修改next配置" class="headerlink" title="4、修改next配置"></a>4、修改next配置</h3><p>复制<code>AppID</code>以及<code>AppKey</code>并在 Next 主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz</span><br><span class="line">  app_key: qODRtEtDSVo4Mxj6DkhVAqd9</span><br></pre></td></tr></table></figure></p>
+<p>这个时候重新生成部署 Hexo 博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的发布日期以及文章的标题，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
+<h2 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h2><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们 LeanCloud 对应的应用的<code>Counter 表</code>中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter表</code>中。</p>
+<ul>
+<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
+<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
+<li>其他字段皆为自动生成，具体作用请查阅 LeanCloud 官方文档，如果你不知道有什么作用请不要随意修改。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo + Next 添加 Valine 评论功能</title>
     <url>/post/c49d1b87.html</url>
     <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>基于 <a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a> 这家服务提供商，实现 Hexo 博客文章的浏览数统计功能。<br><a href="https://valine.js.org/" target="_blank" rel="noopener">Valine</a> 是基于 LeanCloud 的评论系统，评论数据都存储在 LeanCloud 平台，洁面很简洁，没有后台，删除和管理评论只能直接操作数据库。  </p>
@@ -1660,36 +1952,6 @@
 <li>SENDER_NAME : 寄件人名称</li>
 <li>TO_EMAIL：这个是填收邮件提醒的邮箱地址，若没有这个字段，则将邮件发到 SMTP_USER</li>
 <li>TEMPLATE_NAME：设置提醒邮件的主题，目前内置了两款主题，分别为 default 与 rainbow。默认为 default </li>
-</ul>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo + Next 添加文章阅读量统计</title>
-    <url>/post/ec069b41.html</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于 <a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a> 这家服务提供商，实现 Hexo 博客文章的浏览数统计功能。  </p>
-<p> Next 主题目前已经合并这个功能，相关代码在<code>themes\next\layout\_third-party\analytics\lean-analytics.swig</code>，可以不用修改主题模版，直接在<code>_config.yml</code>中配置即可。</p>
-<h2 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置LeanCloud</h2><p>在注册完成 LeanCloud 帐号并验证邮箱之后，我们就可以登录帐号。</p>
-<h3 id="1、创建一个开发版应用（免费）："><a href="#1、创建一个开发版应用（免费）：" class="headerlink" title="1、创建一个开发版应用（免费）："></a>1、创建一个开发版应用（免费）：</h3><p>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台点击创建应用：<br><img src="http://cdn.luanzhuxian.com/blog/leancloud.png" alt="avatar"><br>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的：<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-application.png" alt="avatar"></p>
-<h3 id="2、设置"><a href="#2、设置" class="headerlink" title="2、设置"></a>2、设置</h3><p>在<code>LeanCloud &gt; 设置 &gt; 安全中心</code>中，<code>服务开关</code>部分只开启<code>数据存储</code>。<br>因为<code>AppID</code>以及<code>AppKey</code>是暴露在外的，为了确保只用于我们自己的博客，建议开启<code>Web安全选项</code>，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。<code>Web安全域名</code>下面要添加你的 Github Page 域名，来确保数据调用的安全：<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-setting.png" alt="avatar"></p>
-<h3 id="3、创建Class"><a href="#3、创建Class" class="headerlink" title="3、创建Class"></a>3、创建Class</h3><p>在应用的数据配置界面，左侧数据栏下，下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。<br>点击顶部的加号图标<code>新建Class</code>。在弹出的选项中选择<code>创建Class</code>用来专门保存我们博客的文章访问量等数据:<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-class.png" alt="avatar"><br><strong>注意：</strong></p>
-<ul>
-<li><strong>为了保证我们前面对 NexT 主题的修改兼容，此处的<font color="red">Class名称必须为Counter</font>。</strong></li>
-<li><strong>由于 LeanCloud 升级了默认的 ACL 权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择无限制。</strong>  </li>
-</ul>
-<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击最左侧菜单栏的设置。<br>在设置界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>App ID</code>以及<code>App Key</code>，有了它，我们就有权限能够通过主题中配置好的 Javascript 代码与这个应用的<code>Counter表</code>进行数据存取操作了:<br><img src="http://cdn.luanzhuxian.com/blog/leancloud-key.png" alt="avatar"></p>
-<h3 id="4、修改next配置"><a href="#4、修改next配置" class="headerlink" title="4、修改next配置"></a>4、修改next配置</h3><p>复制<code>AppID</code>以及<code>AppKey</code>并在 Next 主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: xscfkohc1AtS7Px8SMRn4SeR-gzGzoHsz</span><br><span class="line">  app_key: qODRtEtDSVo4Mxj6DkhVAqd9</span><br></pre></td></tr></table></figure></p>
-<p>这个时候重新生成部署 Hexo 博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的发布日期以及文章的标题，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
-<h2 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h2><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们 LeanCloud 对应的应用的<code>Counter 表</code>中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter表</code>中。</p>
-<ul>
-<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
-<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
-<li>其他字段皆为自动生成，具体作用请查阅 LeanCloud 官方文档，如果你不知道有什么作用请不要随意修改。</li>
 </ul>
 ]]></content>
       <categories>
