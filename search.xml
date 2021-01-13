@@ -652,7 +652,7 @@
 <h1 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h1><p>作用域指的是代码中特定变量的有效范围，规定了如何查找变量，确定当前执行代码对变量的访问权限。<code>JavaScript</code>采用静态作用域。代码写在哪里作用域就在哪里确定，函数在定义的时候（不是调用的时候）就已经确定了函数体内部自由变量的作用域。作用域确定了就不会再变化。  </p>
 <h1 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h1><p>这就带来一个问题，要是当前执行上下文里没有要找的变量呢？Javascript 会就此罢手吗？下面的例子里有答案。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var name=&apos;Tyler&apos;</span><br><span class="line">function logName() &#123;</span><br><span class="line">  console.log(name)</span><br><span class="line">&#125;</span><br><span class="line">logName()</span><br></pre></td></tr></table></figure></p>
 <p><img src="/images/blog/execution-context/execution-context_9.gif" alt="avatar"><br>如果 Javascript 引擎在函数执行上下文找不到匹配的局部变量，它会到最接近的父级上下文中查找。这条查找链会一直延伸到全局执行上下文。如果此时仍然找不到该变量，Javascript 引擎就会抛出一个引用错误。  </p>
-<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>之前我们了解到函数中创建的变量仅局部有效，一旦函数执行上下文从调用栈弹出，这些变量就访问不到了。<br>如果你在一个函数中嵌入了另一个函数，情况就变了。这种函数套函数的情况下，即使父级函数的执行上下文从调用栈弹出了，子级函数仍然能够访问父级函数的作用域。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var count=0</span><br><span class="line">function makeAdder(x) &#123;</span><br><span class="line">  return function inner(y) &#123;</span><br><span class="line">    return x + y</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">var add5 = makeAdder(5)</span><br><span class="line">count += add5(2) // 7</span><br></pre></td></tr></table></figure></p>
+<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>在<code>js</code>中，实现外部作用域访问内部作用域的方法叫做闭包。<br>之前我们了解到函数中创建的变量仅局部有效，一旦函数执行上下文从调用栈弹出，这些变量就访问不到了。<br>如果你在一个函数中嵌入了另一个函数，情况就变了。这种函数套函数的情况下，即使父级函数的执行上下文从调用栈弹出了，子级函数仍然能够访问父级函数的作用域。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var count=0</span><br><span class="line">function makeAdder(x) &#123;</span><br><span class="line">  return function inner(y) &#123;</span><br><span class="line">    return x + y</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">var add5 = makeAdder(5)</span><br><span class="line">count += add5(2) // 7</span><br></pre></td></tr></table></figure></p>
 <p><img src="/images/blog/execution-context/execution-context_10.gif" alt="avatar"><br>注意，makeAdder 执行上下文从调用栈弹出后，创建了一个 Closure Scope（闭包作用域）。Closure Scope 中的变量环境和 makeAdder 执行上下文中的变量环境相同。这是因为我们在函数中嵌入了另一个函数。<br>在本例中，inner 函数嵌在 makeAdder 中，所以 inner 在 makeAdder 变量环境的基础上创建了一个闭包。因为闭包作用域的存在，即使 makeAdder 已经从调用栈弹出了，inner 仍然能够访问到 x 变量（通过作用域链）。</p>
 <h1 id="变量的查找规则"><a href="#变量的查找规则" class="headerlink" title="变量的查找规则"></a>变量的查找规则</h1><p>先从当前的执行上下文中找保存的作用域（对象），在当前作用域的 Environment Record（对应的执行上下文）中查找对应的属性, 如果有直接返回, 否则通过作用域链向上查找，顺着<code>__outer__</code>在上一级作用域的里面的 Environment Record 中查找对应的属性，直到全局作用域, 如果还找不到就抛出找不到的异常。  </p>
 <p>这里有一个小测试。下面代码中，打印出来的 bar 将会是什么？<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function foo() &#123;</span><br><span class="line">  var bar = &apos;Declared in foo&apos;</span><br><span class="line">&#125;</span><br><span class="line">foo()</span><br><span class="line">console.log(bar)</span><br></pre></td></tr></table></figure></p>
@@ -681,9 +681,9 @@
 <h1 id="执行上下文（Execution-Context）"><a href="#执行上下文（Execution-Context）" class="headerlink" title="执行上下文（Execution Context）"></a>执行上下文（Execution Context）</h1><p>执行上下文是当前<code>JavaScript</code>代码被引擎解析和执行时所在环境的抽象概念。帮助<code>JavaScript</code>引擎管理整个解析和运行代码的复杂过程。为我们的可执行代码块提供了执行前的必要准备工作，例如变量对象的定义、作用域链的扩展、提供调用者的对象引用等信息。<br>在代码执行过程中，可能会出现多个执行上下文，但运行的执行上下文最多只有一个。为了管理执行上下文，我们引入了执行上下文栈，处于栈顶的那个元素就是运行的执行上下文。当解释器遇到函数、块语句、<code>try...catch</code>时，都会创建一个新的执行上下文压入栈，成为当前上下文。   </p>
 <h2 id="执行上下文的生命周期"><a href="#执行上下文的生命周期" class="headerlink" title="执行上下文的生命周期"></a>执行上下文的生命周期</h2><p><strong>创建阶段</strong>  </p>
 <ul>
-<li>用当前函数的参数列表<code>arguments</code>初始化一个<code>变量对象</code>并将当前执行上下文与之关联，函数代码块中声明的变量和函数将作为属性添加到这个<code>变量对象</code>上。在这一阶段，会进行变量和函数的初始化声明，变量统一定义为<code>undefined</code>需要等到赋值时才会有确值，而函数则会直接定义。</li>
-<li>确定<code>this</code></li>
-<li>构建作用域链</li>
+<li><strong>确定<code>this</code></strong>；</li>
+<li><strong>创建作用域链</strong>；</li>
+<li><strong>创建变量、函数、参数</strong>：用当前函数的参数列表<code>arguments</code>初始化一个<code>变量对象</code>，并将当前执行上下文与之关联，函数代码块中声明的变量和函数将作为属性添加到这个<code>变量对象</code>上。在这一阶段，会进行变量和函数的初始化声明，变量统一定义为<code>undefined</code>需要等到赋值时才会有确值，而函数则会直接定义。</li>
 </ul>
 <p><strong>执行阶段</strong><br>代码开始逐条执行，在这个阶段，引擎开始对定义的变量赋值，开始顺着作用域链访问变量，如果内部有函数调用就创建一个新的执行上下文压入执行栈并把控制权交出。  </p>
 <p><strong>销毁阶段</strong><br>函数执行完成后，当前执行上下文（局部环境）会被弹出执行上下文栈并且销毁，控制权被重新交给执行栈上一层的执行上下文。  </p>
@@ -777,6 +777,8 @@
 <h2 id="词法作用域（Lexical-Scoping）"><a href="#词法作用域（Lexical-Scoping）" class="headerlink" title="词法作用域（Lexical Scoping）"></a>词法作用域（Lexical Scoping）</h2><p>定义在词法阶段的作用域。是词法分析阶段确定的。由写代码时，将变量、函数和块作用域写在哪来决定的。函数的词法作用域只由函数的声明位置决定，跟在哪调用无关。根据声明的位置将变量分配给相应的作用域，并由嵌套关系决定了作用域的嵌套，即作用域链是基于作用域嵌套。因此当词法分析器处理代码时，通常会保持作用域不变。  </p>
 <p>词法作用域意味着作用域是函数的声明位置决定的。编译词法分析阶段基本能知道全部标识符在哪及如何声明的，从而能够预测在执行过程中如何对它们进行查找。而作用域气泡的结构和相互间位置关系给引擎提供了足够的位置信息，引擎用这些信息来查找标识符。</p>
 <h2 id="动态作用域（Dynamic-Scoping）"><a href="#动态作用域（Dynamic-Scoping）" class="headerlink" title="动态作用域（Dynamic Scoping）"></a>动态作用域（Dynamic Scoping）</h2><p>比较少见</p>
+<h1 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h1><p>综上所述，举个例子来说明：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var a = 1</span><br><span class="line">function foo() &#123;</span><br><span class="line">    var b = 2</span><br><span class="line">    console.log(a)</span><br><span class="line">    console.log(b)</span><br><span class="line">&#125;</span><br><span class="line">foo()   // 打印 a、b</span><br></pre></td></tr></table></figure></p>
+<p>怎么理解作用域是一套规则？此处这套规则就是，在<code>foo</code>的函数作用域可以查找<code>b</code>，沿作用域链在全局作用域可以查找<code>a</code>。  </p>
 ]]></content>
       <categories>
         <category>javascript</category>
